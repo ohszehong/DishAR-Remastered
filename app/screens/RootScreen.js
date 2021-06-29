@@ -3,10 +3,10 @@ import * as eva from "@eva-design/eva";
 import { StyleSheet, StatusBar } from "react-native";
 import { Layout } from "@ui-kitten/components";
 
-import RootScreenLogo from "../components/RootScreenLogo";
-import ScanQRModal from "../components/ScanQRModal";
-import LoginModal from "../components/LoginModal";
-import RegisterModal from "../components/RegisterModal";
+import RootScreenLogo from "../components/rootscreen/RootScreenLogo";
+import ScanQRModal from "../components/rootscreen/ScanQRModal";
+import LoginModal from "../components/rootscreen/LoginModal";
+import RegisterModal from "../components/rootscreen/RegisterModal";
 
 function RootScreen(props) {
   //hooks

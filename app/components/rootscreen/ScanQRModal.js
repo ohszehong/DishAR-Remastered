@@ -4,7 +4,7 @@ import { Layout, Text, Button, Icon } from "@ui-kitten/components";
 
 import { SimpleAnimation } from "react-native-simple-animations";
 
-import colors from "../config/colors";
+import colors from "../../config/colors";
 
 export const ScanIcon = (props) => (
   <Icon
