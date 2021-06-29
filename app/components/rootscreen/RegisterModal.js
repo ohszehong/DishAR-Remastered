@@ -1,25 +1,20 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  StatusBar,
-  Dimensions,
-  ScrollView,
-  Image,
-} from "react-native";
+import { StyleSheet, Dimensions, ScrollView } from "react-native";
 import { SimpleAnimation } from "react-native-simple-animations";
 import {
-  Modal,
   Layout,
   Text,
   Divider,
   Input,
   Button,
+  Spinner,
 } from "@ui-kitten/components";
 import * as ImagePicker from "expo-image-picker";
 
-import colors from "../config/colors";
-import RoAPI from "../api/restaurant-owner-caller";
-import { inputRegexValidation } from "../utilities/inputRegexes";
+import colors from "../../config/colors";
+import RoAPI from "../../api/restaurant-owner-caller";
+import { inputRegexValidation } from "../../utilities/inputRegexes";
+import PopUpMsg from "../reusable/PopUpMsg";
 
 function RegisterModal({ onPromptRegisterModal }) {
   //input data update
@@ -41,6 +36,9 @@ function RegisterModal({ onPromptRegisterModal }) {
     errorField: null,
     errorMsg: null,
   });
+
+  //loading signal
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChooseLogo = async () => {
     const options = {
@@ -99,7 +97,7 @@ function RegisterModal({ onPromptRegisterModal }) {
       setInputError({
         errorField: "username",
         errorMsg:
-          "username must has at least 5 characters and cannot contain special characters.",
+          "username must has at least 5 characters and cannot contain special characters or space.",
       });
     } else if (!inputRegexValidation.passwordRegex.test(password)) {
       setInputError({
@@ -137,6 +135,8 @@ function RegisterModal({ onPromptRegisterModal }) {
   };
 
   const handleSubmitRegistration = async () => {
+    setIsLoading(true);
+
     const validateInput = validateFormData();
 
     if (validateInput) {
@@ -158,8 +158,18 @@ function RegisterModal({ onPromptRegisterModal }) {
       if (response.success) {
         console.log("submitted!");
         setSubmitSuccess(true);
+      } else {
+        if (response.error.keyValue.username === username) {
+          setInputError({
+            errorField: "username",
+            errorMsg: "username already exists.",
+          });
+          setSubmitSuccess(false);
+        }
       }
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -250,21 +260,21 @@ function RegisterModal({ onPromptRegisterModal }) {
             <Text style={styles.errorMsg}>{inputError.errorMsg}</Text>
           )}
 
-          <Layout style={styles.formInputContainer}>
+          {/* <Layout style={styles.formInputContainer}>
             <Button size="large" status="info" onPress={handleChooseLogo}>
               UPLOAD RESTAURANT LOGO
             </Button>
           </Layout>
           {selectedLogo && (
             <Image style={styles.uploadedLogo} source={{ uri: selectedLogo }} />
-          )}
+          )} */}
           <Layout style={styles.formInputContainer}>
             <Button
               size="large"
               status="success"
               onPress={handleSubmitRegistration}
             >
-              SUBMIT
+              {isLoading ? <Spinner status="control" /> : "SUBMIT"}
             </Button>
           </Layout>
           <Layout style={styles.formInputContainer}>
@@ -278,6 +288,13 @@ function RegisterModal({ onPromptRegisterModal }) {
           </Layout>
         </ScrollView>
       </Layout>
+
+      <PopUpMsg
+        visible={submitSuccess}
+        success={submitSuccess}
+        text={"Submitted, Waiting for Approval!"}
+        onPress={() => setSubmitSuccess(false)}
+      />
     </SimpleAnimation>
   );
 }

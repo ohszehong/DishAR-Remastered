@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { Layout, Input, Divider, Button, Text } from "@ui-kitten/components";
 import { SimpleAnimation } from "react-native-simple-animations";
 
-import colors from "../config/colors";
+import colors from "../../config/colors";
 
 function LoginModal({ containerStyle, onSwitchScreen, onPromptRegisterModal }) {
   return (

@@ -11,7 +11,7 @@ function RootScreenLogo({
     <View style={logoContainerStyle}>
       <Image
         style={logoImageStyle}
-        source={require("../assets/DishARLogo.png")}
+        source={require("../../assets/DishARLogo.png")}
       />
       <Text style={logoTitleStyle} category="h1">
         DishAR
