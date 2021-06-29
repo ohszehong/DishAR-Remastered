@@ -9,8 +9,7 @@ const registerRO = async (roInfo) => {
       return data;
     })
     .catch((err) => {
-      console.log(err);
-      return null;
+      return err.response.data;
     });
 };
 
