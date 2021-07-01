@@ -1,9 +1,9 @@
 import axios from "axios";
 import { HOST_URL } from "../server/master-data-base-url";
 
-const registerRO = async (roInfo) => {
+const approveRO = async (roId) => {
   return await axios
-    .post(HOST_URL + "/api/restaurant-owner/register-restaurant-owner", roInfo)
+    .post(HOST_URL + "/api/admin/approve-restaurant-owner", roId)
     .then((res) => {
       const data = res.data;
       return data;
@@ -13,9 +13,9 @@ const registerRO = async (roInfo) => {
     });
 };
 
-const getPendingRO = async () => {
+const rejectRO = async (roId) => {
   return await axios
-    .get(HOST_URL + "/api/restaurant-owner/get-pending-restaurant-owners")
+    .post(HOST_URL + "/api/admin/reject-restaurant-owner", roId)
     .then((res) => {
       const data = res.data;
       return data;
@@ -24,10 +24,8 @@ const getPendingRO = async () => {
       return err.response.data;
     });
 };
-
-const loginRO = async (roCredentials) => {};
 
 export default {
-  registerRO,
-  getPendingRO,
+  approveRO,
+  rejectRO,
 };

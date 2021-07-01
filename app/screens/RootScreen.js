@@ -8,7 +8,7 @@ import ScanQRModal from "../components/rootscreen/ScanQRModal";
 import LoginModal from "../components/rootscreen/LoginModal";
 import RegisterModal from "../components/rootscreen/RegisterModal";
 
-function RootScreen(props) {
+function RootScreen({ navigation }) {
   //hooks
   const [isLoginScreen, setIsLoginScreen] = useState(false);
   const [promptRegisterModal, setPromptRegisterModal] = useState(false);
@@ -48,6 +48,7 @@ function RootScreen(props) {
             isHidden={isLoginScreen}
             onSwitchScreen={handleSwitchScreen}
             onPromptRegisterModal={handlePromptRegisterModal}
+            navigation={navigation}
           />
         )}
       </Layout>
