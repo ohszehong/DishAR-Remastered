@@ -2,16 +2,17 @@ import React from "react";
 import * as eva from "@eva-design/eva";
 import { StyleSheet } from "react-native";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
-
-import RootScreen from "./app/screens/RootScreen";
 import { AntDesignIconsPack } from "./app/icons/ant-design-icons";
+
+import { default as theme } from "./theme.json";
+import Stacks from "./app/navigator/Stacks";
 
 export default function App() {
   return (
     <>
       <IconRegistry icons={AntDesignIconsPack} />
-      <ApplicationProvider {...eva} theme={eva.light}>
-        <RootScreen />
+      <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
+        <Stacks />
       </ApplicationProvider>
     </>
   );

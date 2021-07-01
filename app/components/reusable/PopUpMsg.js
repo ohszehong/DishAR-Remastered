@@ -42,45 +42,39 @@ export const FailIcon = (props) => (
 function PopUpMsg(props) {
   const { visible, onPress, success, text } = props;
 
-  const StatefulModalContent = () => {
-    return (
-      <Card
-        style={styles.card}
-        status={success ? "success" : "danger"}
-        onPress={onPress}
-      >
-        {success ? <SuccessIcon /> : <FailIcon />}
-        <Text style={styles.centerText}>{text}</Text>
-        <Text
-          style={{
-            ...styles.centerText,
-            color: success ? colors.primary : colors.error,
-            marginTop: 15,
-          }}
+  const StatefulModal = () => {
+    try {
+      return (
+        <Modal
+          visible={visible}
+          onBackdropPress={onPress}
+          backdropStyle={{ backgroundColor: colors.backdrop }}
         >
-          Press anywhere to continue.
-        </Text>
-      </Card>
-    );
+          <Card
+            style={styles.card}
+            status={success ? "success" : "danger"}
+            onPress={onPress}
+          >
+            {success ? <SuccessIcon /> : <FailIcon />}
+            <Text style={styles.centerText}>{text}</Text>
+            <Text
+              style={{
+                ...styles.centerText,
+                color: success ? colors.primary : colors.error,
+                marginTop: 15,
+              }}
+            >
+              Press anywhere to continue.
+            </Text>
+          </Card>
+        </Modal>
+      );
+    } catch (err) {
+      return null;
+    }
   };
 
-  return (
-    <SimpleAnimation
-      direction="up"
-      movementType="slide"
-      duration={800}
-      distance={400}
-      style={styles.container}
-    >
-      <Modal
-        visible={visible}
-        backdropStyle={styles.backdrop}
-        onBackdropPress={onPress}
-      >
-        <StatefulModalContent />
-      </Modal>
-    </SimpleAnimation>
-  );
+  return <StatefulModal />;
 }
 
 const styles = StyleSheet.create({
