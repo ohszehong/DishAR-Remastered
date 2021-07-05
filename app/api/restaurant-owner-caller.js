@@ -25,9 +25,33 @@ const getPendingRO = async () => {
     });
 };
 
-const loginRO = async (roCredentials) => {};
+const addFoodToMenu = async (foodInfo) => {
+  return await axios
+    .post(HOST_URL + "/api/restaurant-owner/add-food-to-menu", foodInfo)
+    .then((res) => {
+      const data = res.data;
+      return data;
+    })
+    .catch((err) => {
+      return err.response.data;
+    });
+};
+
+const editFoodDetails = async (foodInfo) => {
+  return await axios
+    .post(HOST_URL + "/api/restaurant-owner/edit-food-details", foodInfo)
+    .then((res) => {
+      const data = res.data;
+      return data;
+    })
+    .catch((err) => {
+      return err.response.data;
+    });
+};
 
 export default {
   registerRO,
   getPendingRO,
+  addFoodToMenu,
+  editFoodDetails,
 };

@@ -22,8 +22,10 @@ app.listen(3000, () => {
 const restaurantOwnerRoutes = require("./router/restaurant-owner-routes");
 const menuRoutes = require("./router/menu-routes");
 const adminRoutes = require("./router/admin-routes");
+const foodRoutes = require("./router/food-routes");
 
 //middleware (using the routes)
 app.use("/api/restaurant-owner", restaurantOwnerRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/food", foodRoutes);
