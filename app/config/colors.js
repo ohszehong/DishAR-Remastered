@@ -4,4 +4,5 @@ export default {
   error: "#ff3333",
   backdrop: "rgba(0, 0, 0, 0.5)",
   empty: "#8F9BB3",
+  white: "#FFFFFF",
 };

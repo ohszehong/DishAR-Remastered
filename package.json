@@ -10,15 +10,20 @@
   "dependencies": {
     "@eva-design/eva": "^2.1.0",
     "@react-native-community/masked-view": "0.1.10",
+    "@react-navigation/bottom-tabs": "^5.11.11",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
     "@ui-kitten/components": "^5.1.0",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
+    "cloudinary": "^1.26.1",
     "expo": "~41.0.1",
+    "expo-document-picker": "~9.1.2",
+    "expo-file-system": "~11.0.2",
     "expo-image-picker": "^10.1.4",
     "expo-status-bar": "~1.0.4",
     "express": "^4.17.1",
+    "firebase": "8.2.3",
     "mongoose": "^5.12.15",
     "nodemon": "^2.0.7",
     "react": "16.13.1",
@@ -29,10 +34,12 @@
     "react-native-reanimated": "~2.1.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.0.0",
+    "react-native-shared-element": "0.7.0",
     "react-native-simple-animations": "^0.2.3",
     "react-native-svg": "^9.13.6",
     "react-native-vector-icons": "^8.1.0",
-    "react-native-web": "~0.13.12"
+    "react-native-web": "~0.13.12",
+    "react-navigation-shared-element": "^5.0.0-alpha1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

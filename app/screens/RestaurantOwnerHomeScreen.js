@@ -1,12 +1,19 @@
-import React from "react";
-import { Layout, Text } from "@ui-kitten/components";
+import React, { Component } from "react";
+import TabNavigator from "../navigator/BottomTabs";
 
-function RestaurantOwnerHomeScreen(props) {
-  return (
-    <Layout>
-      <Text>Hello World!</Text>
-    </Layout>
-  );
+class RestaurantOwnerHomeScreen extends Component {
+  constructor({ navigation, route, ...props }) {
+    super();
+    this.state = {
+      restaurantOwnerData: route.data,
+    };
+  }
+
+  render() {
+    const { restaurantOwnerData } = this.state;
+
+    return <TabNavigator restaurantOwnerData={restaurantOwnerData} />;
+  }
 }
 
 export default RestaurantOwnerHomeScreen;

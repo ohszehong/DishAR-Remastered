@@ -9,4 +9,5 @@ export const inputRegexValidation = {
     "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
   ),
   contactNoRegex: new RegExp("^(01)[0-46-9]*[0-9]{7,8}$"),
+  numberOnlyRegex: new RegExp("^\\d{1,10}(\\.\\d{1,4})?$"),
 };

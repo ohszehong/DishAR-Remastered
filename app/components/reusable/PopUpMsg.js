@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { SimpleAnimation } from "react-native-simple-animations";
-import { Modal, Text, Button, Card, Icon } from "@ui-kitten/components";
+import { Modal, Text, Button, Card, Icon, Layout } from "@ui-kitten/components";
 
 import colors from "../../config/colors";
 
@@ -39,35 +38,100 @@ export const FailIcon = (props) => (
   />
 );
 
-function PopUpMsg(props) {
+export const WarningIcon = (props) => (
+  <Icon
+    name="exclamationcircle"
+    {...props}
+    style={[
+      props.style,
+      {
+        height: 50,
+        width: 50,
+        color: colors.error,
+        marginBottom: 15,
+        alignSelf: "center",
+      },
+    ]}
+  />
+);
+
+function PopUpMsg({
+  promptConfirmMsg = false,
+  confirmMsg = null,
+  onPressConfirm = null,
+  onPressCancelConfirm = null,
+  ...props
+}) {
   const { visible, onPress, success, text } = props;
+
+  //By default is just a pop up message that show the status.
+  //If want to prompt a confirm message, pass those confirm props as shown at the top.
 
   const StatefulModal = () => {
     try {
       return (
-        <Modal
-          visible={visible}
-          onBackdropPress={onPress}
-          backdropStyle={{ backgroundColor: colors.backdrop }}
-        >
-          <Card
-            style={styles.card}
-            status={success ? "success" : "danger"}
-            onPress={onPress}
-          >
-            {success ? <SuccessIcon /> : <FailIcon />}
-            <Text style={styles.centerText}>{text}</Text>
-            <Text
-              style={{
-                ...styles.centerText,
-                color: success ? colors.primary : colors.error,
-                marginTop: 15,
-              }}
+        <React.Fragment>
+          {promptConfirmMsg && (
+            <Modal
+              visible={promptConfirmMsg}
+              backdropStyle={{ backgroundColor: colors.backdrop }}
             >
-              Press anywhere to continue.
-            </Text>
-          </Card>
-        </Modal>
+              <Card style={styles.card} status="warning">
+                <WarningIcon />
+                <Text
+                  style={{
+                    marginBottom: 15,
+                    color: colors.error,
+                    ...styles.centerText,
+                  }}
+                >
+                  {confirmMsg}
+                </Text>
+                <Layout
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    status="success"
+                    onPress={onPressConfirm}
+                    style={{ marginRight: 20 }}
+                  >
+                    CONFIRM
+                  </Button>
+                  <Button status="danger" onPress={onPressCancelConfirm}>
+                    CANCEL
+                  </Button>
+                </Layout>
+              </Card>
+            </Modal>
+          )}
+
+          <Modal
+            visible={visible}
+            onBackdropPress={onPress}
+            backdropStyle={{ backgroundColor: colors.backdrop }}
+          >
+            <Card
+              style={styles.card}
+              status={success ? "success" : "danger"}
+              onPress={onPress}
+            >
+              {success ? <SuccessIcon /> : <FailIcon />}
+              <Text style={styles.centerText}>{text}</Text>
+              <Text
+                style={{
+                  ...styles.centerText,
+                  color: success ? colors.primary : colors.error,
+                  marginTop: 15,
+                }}
+              >
+                Press anywhere to continue.
+              </Text>
+            </Card>
+          </Modal>
+        </React.Fragment>
       );
     } catch (err) {
       return null;
@@ -87,7 +151,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    height: 200,
+    minHeight: 200,
     width: 300,
     justifyContent: "center",
     alignItems: "center",

@@ -9,7 +9,6 @@ import {
   Button,
   Spinner,
 } from "@ui-kitten/components";
-import * as ImagePicker from "expo-image-picker";
 
 import colors from "../../config/colors";
 import RoAPI from "../../api/restaurant-owner-caller";
@@ -39,21 +38,6 @@ function RegisterModal({ onPromptRegisterModal }) {
 
   //loading signal
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleChooseLogo = async () => {
-    const options = {
-      mediaType: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-      allowsEditing: true,
-    };
-    let result = await ImagePicker.launchImageLibraryAsync(options);
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setSelectedLogo(result.uri);
-    }
-  };
 
   const validateFormData = () => {
     var validate = false;
@@ -260,14 +244,6 @@ function RegisterModal({ onPromptRegisterModal }) {
             <Text style={styles.errorMsg}>{inputError.errorMsg}</Text>
           )}
 
-          {/* <Layout style={styles.formInputContainer}>
-            <Button size="large" status="info" onPress={handleChooseLogo}>
-              UPLOAD RESTAURANT LOGO
-            </Button>
-          </Layout>
-          {selectedLogo && (
-            <Image style={styles.uploadedLogo} source={{ uri: selectedLogo }} />
-          )} */}
           <Layout style={styles.formInputContainer}>
             <Button
               size="large"
@@ -337,11 +313,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: "100%",
-  },
-  uploadedLogo: {
-    marginTop: 20,
-    width: 100,
-    height: 100,
   },
 });
 

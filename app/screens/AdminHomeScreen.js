@@ -191,7 +191,7 @@ class AdminHomeScreen extends Component {
         ) : (
           <React.Fragment>
             <Layout style={styles.topTabContainer}>
-              <TabBar style={styles.topTab} selectedIndex={selectedIndex}>
+              <TabBar style={styles.topTab} selectedIndex={0}>
                 <Tab
                   style={{ flexDirection: "row" }}
                   title={(evaProps) => (
