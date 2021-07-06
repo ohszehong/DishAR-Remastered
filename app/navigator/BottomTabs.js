@@ -73,7 +73,7 @@ const TabNavigator = ({ restaurantOwnerData }) => (
       initialParams={restaurantOwnerData}
     />
     <Screen name="AddFood" component={AddFoodForm} />
-    <Screen name="ViewQR" component={ViewQR} />
+    <Screen name="ViewQR" component={ViewQR} initialParams={restaurantOwnerData}/>
   </Navigator>
 );
 
