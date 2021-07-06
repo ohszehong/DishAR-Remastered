@@ -4,6 +4,7 @@ const RestaurantOwner = require("../../models/RestaurantOwner");
 const Food = require("../../models/Food");
 const Menu = require("../../models/Menu");
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 
 router.post("/register-restaurant-owner", (req, res) => {
   let restaurantOwner = new RestaurantOwner({
@@ -215,6 +216,33 @@ router.post("/edit-food-details", (req, res) => {
         });
     }
   );
+});
+
+router.post("/delete-food-from-menu", (req, res) => {
+
+  //delete data in Food collection 
+  const restaurantOwnerId = req.body.restaurantOwnerId;
+  const foodId = mongoose.Types.ObjectId(req.body.foodId);
+
+  Food.findByIdAndDelete(foodId, (err, results) => {
+    if(err) {
+      return res.status(500).json({success: false, error: err, msg: "Internal server error when deleting food from menu."});
+    }
+    
+  })
+
+      //if success, delete food id in Menu collection 
+  Menu.updateOne({ownedBy: restaurantOwnerId}, {$pull: {menuItems: foodId}}, (err,results) => {
+    if(err) {
+      return res.status(500).json({success: false, error: err, msg: "Internal server error when removing food Id from menu."});
+    }
+        
+    if(results.nModified === 0) {
+      return res.status(400).json({success: false, msg: "Already deleted from database, please refresh the menu in menu section."});
+    }
+    return res.status(200).json({success: true, data: results, msg: "Successfully delete food from menu."});
+  })
+
 });
 
 module.exports = router;

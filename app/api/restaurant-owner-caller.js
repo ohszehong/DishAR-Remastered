@@ -49,9 +49,23 @@ const editFoodDetails = async (foodInfo) => {
     });
 };
 
+const deleteFoodFromMenu = async (roAndFoodInfo) => {
+
+  return await axios
+  .post(HOST_URL + "/api/restaurant-owner/delete-food-from-menu", roAndFoodInfo)
+  .then((res) => {
+    const data = res.data;
+    return data;
+  }).catch((err) => {
+    return err.response.data;
+  })
+
+}
+
 export default {
   registerRO,
   getPendingRO,
   addFoodToMenu,
   editFoodDetails,
+  deleteFoodFromMenu
 };
