@@ -62,10 +62,24 @@ const deleteFoodFromMenu = async (roAndFoodInfo) => {
 
 }
 
+const getRestaurantOwner = async (roId) => {
+
+  return await axios
+  .post(HOST_URL + "/api/restaurant-owner/get-restaurant-owner", roId)
+  .then((res) => {
+    const data = res.data;
+    return data;
+  }).catch((err) => {
+    return err.response.data;
+  })
+
+}
+
 export default {
   registerRO,
   getPendingRO,
   addFoodToMenu,
   editFoodDetails,
-  deleteFoodFromMenu
+  deleteFoodFromMenu,
+  getRestaurantOwner,
 };

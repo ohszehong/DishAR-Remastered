@@ -46,27 +46,63 @@ export const LogoutIcon = (props) => (
   />
 );
 
-const BottomTabBar = ({ navigation, state, restaurantOwnerData }) => (
-  <BottomNavigation
-    selectedIndex={state.index}
-    onSelect={(index) =>
-      navigation.jumpTo(state.routeNames[index], { data: restaurantOwnerData })
-    }
-    style={styles.bottomTabBar}
-  >
-    <BottomNavigationTab title="MENU" icon={MenuIcon} />
-    <BottomNavigationTab title="ADD" icon={AddFoodIcon} />
-    <BottomNavigationTab title="QR CODE" icon={QRIcon} />
-    <BottomNavigationTab title="LOGOUT" icon={LogoutIcon} />
-  </BottomNavigation>
-);
+const BottomTabBar = ({ navigation, state, restaurantOwnerData }) => {
+    return (
+      <BottomNavigation
+        selectedIndex={state.index}
+        onSelect={(index) =>
+          navigation.jumpTo(state.routeNames[index], { data: restaurantOwnerData })
+        }
+        style={styles.bottomTabBar}
+      >
+        <BottomNavigationTab title="MENU" icon={MenuIcon} />
+        <BottomNavigationTab title="ADD" icon={AddFoodIcon} />
+        <BottomNavigationTab title="QR CODE" icon={QRIcon} />
+        <BottomNavigationTab title="LOGOUT" icon={LogoutIcon} />
+      </BottomNavigation>)
+};
 
-const TabNavigator = ({ restaurantOwnerData }) => (
-  <Navigator
-    tabBar={(props) => (
-      <BottomTabBar {...props} restaurantOwnerData={restaurantOwnerData} />
-    )}
-  >
+const CustomerBottomTabBar = ({ navigation, state, restaurantOwnerData }) => {
+  return (
+    <BottomNavigation
+      selectedIndex={state.index}
+      onSelect={(index) =>
+        navigation.jumpTo(state.routeNames[index], { data: restaurantOwnerData })
+      }
+      style={styles.bottomTabBar}
+    >
+      <BottomNavigationTab title="MENU" icon={MenuIcon} />
+      <BottomNavigationTab title="ORDER" icon={AddFoodIcon} />
+      <BottomNavigationTab title="QUIT" icon={QRIcon} />
+    </BottomNavigation>)
+};
+
+const TabNavigator = ({ restaurantOwnerData }) => {
+  
+  if(restaurantOwnerData.role === "customer") {
+    
+  return (
+    <Navigator
+      tabBar={(props) => (
+        <CustomerBottomTabBar {...props} restaurantOwnerData={restaurantOwnerData} />
+      )}
+    >
+    <Screen
+      name="BetweenFoodAndDetails"
+      children={(props) => <BetweenFoodAndDetails {...props} />}
+      initialParams={restaurantOwnerData}
+    />
+
+    {/* here later add screen for order and quit */ }
+    </Navigator>);
+  }
+  else {
+  return (
+    <Navigator
+      tabBar={(props) => (
+        <BottomTabBar {...props} restaurantOwnerData={restaurantOwnerData} />
+      )}
+    >
     <Screen
       name="BetweenFoodAndDetails"
       children={(props) => <BetweenFoodAndDetails {...props} />}
@@ -74,8 +110,9 @@ const TabNavigator = ({ restaurantOwnerData }) => (
     />
     <Screen name="AddFood" component={AddFoodForm} />
     <Screen name="ViewQR" component={ViewQR} initialParams={restaurantOwnerData}/>
-  </Navigator>
-);
+    </Navigator>);
+  }
+}
 
 const styles = StyleSheet.create({
   bottomTabBar: {

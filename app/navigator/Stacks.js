@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import RootScreen from "./../screens/RootScreen";
 import AdminHomeScreen from "../screens/AdminHomeScreen";
 import RestaurantOwnerHomeScreen from "../screens/RestaurantOwnerHomeScreen";
+import QRCodeScannerScreen from "../screens/QRCodeScannerScreen";
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,10 @@ const Stacks = () => {
         <Stack.Screen
           name="RestaurantOwner"
           component={RestaurantOwnerHomeScreen}
+        />
+        <Stack.Screen
+          name="QRCodeScanner"
+          component={QRCodeScannerScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

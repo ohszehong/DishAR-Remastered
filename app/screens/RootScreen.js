@@ -41,6 +41,7 @@ function RootScreen({ navigation }) {
             containerStyle={styles.scanQRModalContainer}
             isHidden={isLoginScreen}
             onSwitchScreen={handleSwitchScreen}
+            navigation={navigation}
           />
         ) : (
           <LoginModal

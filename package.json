@@ -20,7 +20,9 @@
     "expo-document-picker": "~9.1.2",
     "expo-file-system": "~11.0.2",
     "expo-image-picker": "^10.1.4",
+    "expo-splash-screen": "~0.10.2",
     "expo-status-bar": "~1.0.4",
+    "expo-updates": "~0.5.4",
     "express": "^4.17.1",
     "firebase": "8.2.3",
     "mongoose": "^5.12.15",
@@ -28,8 +30,11 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "~0.63.4",
+    "react-native-camera": "^3.44.3",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "~1.10.2",
+    "react-native-permissions": "^3.0.5",
+    "react-native-qrcode-scanner": "^1.5.4",
     "react-native-qrcode-svg": "^6.1.1",
     "react-native-reanimated": "~2.1.0",
     "react-native-safe-area-context": "3.2.0",
@@ -37,13 +42,11 @@
     "react-native-shared-element": "0.7.0",
     "react-native-simple-animations": "^0.2.3",
     "react-native-svg": "^9.13.6",
+    "react-native-unimodules": "~0.13.3",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "^0.17.1",
     "react-native-webview": "^9.0.2",
-    "react-navigation-shared-element": "^5.0.0-alpha1",
-    "expo-splash-screen": "~0.10.2",
-    "expo-updates": "~0.5.4",
-    "react-native-unimodules": "~0.13.3"
+    "react-navigation-shared-element": "^5.0.0-alpha1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

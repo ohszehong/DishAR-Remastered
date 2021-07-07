@@ -32,6 +32,29 @@ router.post("/register-restaurant-owner", (req, res) => {
   });
 });
 
+router.post("/get-restaurant-owner", (req, res) => {
+
+  const restaurantOwnerId = req.body._id;
+
+  RestaurantOwner.findById(
+    restaurantOwnerId,
+    { password: 0 },
+    (err, results) => {
+
+      if (err) {
+        return res
+          .status(500)
+          .json({ success: false, error: err, msg: "server failure." });
+      }
+      return res.status(200).json({
+        success: true,
+        data: results,
+        msg: "Redirecting to menu...",
+      });
+    }
+  );
+});
+
 router.get("/get-pending-restaurant-owners", (req, res) => {
   RestaurantOwner.find(
     { isApproved: false },

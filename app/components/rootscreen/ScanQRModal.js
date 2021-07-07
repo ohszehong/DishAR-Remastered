@@ -14,7 +14,7 @@ export const ScanIcon = (props) => (
   />
 );
 
-function ScanQRModal({ containerStyle, onSwitchScreen }) {
+function ScanQRModal({ containerStyle, onSwitchScreen, navigation }) {
   return (
     <SimpleAnimation
       direction="up"
@@ -29,7 +29,7 @@ function ScanQRModal({ containerStyle, onSwitchScreen }) {
           appearance="outline"
           status="success"
           accessoryLeft={ScanIcon}
-          onPress={() => console.log("Tapped")}
+          onPress={() => navigation.navigate("QRCodeScanner")}
         >
           <Text category="h5">SCAN QR CODE</Text>
         </Button>
