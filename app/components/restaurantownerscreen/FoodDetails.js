@@ -96,6 +96,11 @@ function FoodDetails({ route, navigation }) {
     setPromptPopUpMsg(false);
     navigation.dispatch(StackActions.pop(1));
   }
+
+  const handleCancelEditForm = () => {
+    setPromptEditForm(false);
+    navigation.dispatch(StackActions.pop(1));
+  }
  
   //loading signal
   const [isLoading, setIsLoading] = useState(false);
@@ -350,7 +355,7 @@ function FoodDetails({ route, navigation }) {
               </Button>
             </Layout>
             <Layout style={{ marginBottom: 15, ...styles.formInputContainer }}>
-              <Button size="large" status="danger" onPress={() => setPromptEditForm(false)}>
+              <Button size="large" status="danger" onPress={handleCancelEditForm}>
                 CANCEL
               </Button>
             </Layout>
@@ -435,11 +440,11 @@ const styles = StyleSheet.create({
   },
   errorMsg: {
     alignSelf:"flex-start",
-    paddingLeft: 25,
     paddingRight: 25,
     color: colors.error,
     fontSize: 15,
     marginTop: 10,
+    width:320,
   },
   formInput: {
     fontSize: 19,
@@ -450,14 +455,15 @@ const styles = StyleSheet.create({
     minHeight: 70,
   },
   formInputContainer: {
-    width: "90%",
+    width: 320,
     marginTop: 20,
+    marginRight:15,
   },
   registerForm: {
     borderRadius: 25,
     height: Dimensions.get("screen").height - 100,
     paddingTop: 40,
-    padding:25,
+    paddingBottom: 60,
     alignItems: "center",
   },
 });

@@ -525,7 +525,7 @@ function AddFoodForm({ navigation, route }) {
             </Button>
           </Layout>
 
-          <Layout style={{ ...styles.formInputContainer, height: 25 }}></Layout>
+          <Layout style={{ ...styles.formInputContainer, height: 25, marginBottom: 50 }}></Layout>
         </ScrollView>
       </Layout>
 
