@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, StatusBar, Dimensions, Image } from "react-native";
+import {
+  StyleSheet,
+  StatusBar,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import {
   Layout,
   Text,
@@ -15,6 +21,7 @@ import { SharedElement } from "react-navigation-shared-element";
 import EmptyListIcon from "../../icons/EmptyListIcon";
 import MenuAPI from "../../api/shared/menu-caller";
 import FoodAPI from "../../api/shared/food-caller";
+import CustomerAPI from "../../api/customer-caller";
 import PriceIcon from "../../icons/PriceIcon";
 
 class MenuList extends Component {
@@ -27,17 +34,24 @@ class MenuList extends Component {
       foodThumbnailUrls: [],
       navigation: navigation,
       refreshing: false,
+      orderData: null,
     };
   }
 
   renderItem = (foodData) => {
-    const { foodThumbnailUrls, navigation, restaurantOwnerData } = this.state;
+    const { foodThumbnailUrls, navigation, restaurantOwnerData, orderData } =
+      this.state;
 
     let data = foodData.item;
 
     data.restaurantOwnerId = restaurantOwnerData._id;
 
     data.thumbnailUrl = foodThumbnailUrls[foodData.index];
+
+    if (restaurantOwnerData.role === "customer") {
+      data.role = "customer";
+      data.orderData = orderData;
+    }
 
     return (
       <Card
@@ -108,6 +122,7 @@ class MenuList extends Component {
   };
 
   startUp = async (restaurantOwnerData) => {
+    this.setState({ isLoading: true });
     //fetch all the foods
     const responseRetrievingMenu = await MenuAPI.retrieveMenu({
       _id: restaurantOwnerData._id,
@@ -141,13 +156,28 @@ class MenuList extends Component {
       );
     }
 
-    this.setState({ refreshing: false });
+    this.setState({ refreshing: false, isLoading: false });
   };
 
   async componentDidMount() {
     this.setState({ isLoading: true });
 
     const { restaurantOwnerData } = this.state;
+
+    //if accessed by customer, generate new order for them
+    if (restaurantOwnerData.role === "customer") {
+      const response = await CustomerAPI.createOrder({
+        _id: restaurantOwnerData._id,
+      });
+
+      if (response.success) {
+        this.setState({
+          orderData: response.data,
+        });
+      } else {
+        console.log(response.msg + ": " + response.error);
+      }
+    }
 
     await this.startUp(restaurantOwnerData);
 
@@ -200,7 +230,9 @@ class MenuList extends Component {
           {isLoading ? (
             <Spinner status="success" size="giant" />
           ) : foodItems.length <= 0 ? (
-            <EmptyListIcon />
+            <TouchableOpacity onPress={() => this.startUp(restaurantOwnerData)}>
+              <EmptyListIcon />
+            </TouchableOpacity>
           ) : (
             <List
               style={styles.listContainer}
