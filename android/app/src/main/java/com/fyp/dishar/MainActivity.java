@@ -1,4 +1,4 @@
-package com.dishARandroid;
+package com.fyp.dishar;
 import android.content.res.Configuration;
 import android.content.Intent;
 

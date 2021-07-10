@@ -1,4 +1,4 @@
-package com.dishARandroid.generated;
+package com.fyp.dishar.generated;
 
 import java.util.Arrays;
 import java.util.List;

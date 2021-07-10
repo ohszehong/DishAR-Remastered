@@ -16,11 +16,10 @@ import {
   Divider,
   Input,
   Spinner,
-  Modal,
-  Icon,
 } from "@ui-kitten/components";
 import { SharedElement } from "react-navigation-shared-element";
 import { StackActions } from "@react-navigation/routers";
+import { CommonActions } from "@react-navigation/native";
 import * as firebase from "firebase";
 
 import PriceIcon from "../../icons/PriceIcon";
@@ -30,7 +29,6 @@ import PopUpMsg from "../reusable/PopUpMsg";
 import colors from "../../config/colors";
 import { inputRegexValidation } from "../../utilities/inputRegexes";
 import RoAPI from "../../api/restaurant-owner-caller";
-import CustomerAPI from "../../api/customer-caller";
 
 function FoodDetails({ route, navigation }) {
   //restaurant owner data
@@ -39,9 +37,16 @@ function FoodDetails({ route, navigation }) {
   //header and footer for card
   const Header = (props) => (
     <Layout {...props}>
-      <Text category="h2" style={{ fontWeight: "bold" }}>
-        {data.foodName}
-      </Text>
+      <Layout style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text category="h2" style={{ fontWeight: "bold" }}>
+          {data.foodName}
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.push("FoodARScene", { data })}
+        >
+          <Image source={require("../../assets/arIcon.png")} />
+        </TouchableOpacity>
+      </Layout>
       <Layout style={styles.priceContainer}>
         <Text category="h5">RM {data.foodPrice}</Text>
         <PriceIcon
@@ -73,139 +78,6 @@ function FoodDetails({ route, navigation }) {
         ) : (
           <DeleteIcon style={{ width: 23, height: 23 }} />
         )}
-      </Button>
-    </Layout>
-  );
-
-  //Icon for counter
-  const AddCountIcon = (props) => (
-    <Icon
-      name="plussquare"
-      {...props}
-      style={[props.style, { height: 35, width: 35, color: colors.primary }]}
-    />
-  );
-
-  const MinusCountIcon = (props) => (
-    <Icon
-      name="minussquare"
-      {...props}
-      style={[props.style, { height: 35, width: 35, color: colors.error }]}
-    />
-  );
-
-  //counter for customer
-  //minimum count of 1
-  const [count, setCount] = useState(1);
-
-  const addCountHandler = () => {
-    setCount(count + 1);
-  };
-  const minusCountHandler = () => {
-    if (count === 1) {
-      return;
-    }
-    setCount(count - 1);
-  };
-
-  const [orderItem, setOrderItem] = useState({
-    foodId: null,
-    foodName: null,
-    foodTotalPrice: 0,
-    foodCount: 0,
-  });
-
-  const handleAddToOrder = async () => {
-    setIsLoading(true);
-
-    const orderId = data.orderData._id;
-
-    //check if it is the same food to add to the order
-    if (orderItem.foodId === data._id) {
-      setOrderItem({
-        foodId: data._id,
-        foodName: data.foodName,
-        foodTotalPrice: orderItem.foodTotalPrice + count * data.foodPrice,
-        foodCount: orderItem.foodCount + count,
-      });
-
-      console.log("we are here: " + JSON.stringify(orderItem));
-    } else {
-      //else create a new item and add to the order
-
-      console.log("data: " + JSON.stringify(data));
-
-      //seems like it will not immediately update after setorder item...
-
-      setOrderItem({
-        foodId: data._id,
-        foodName: data.foodName,
-        foodTotalPrice: data.foodPrice * count,
-        foodCount: count,
-      });
-      console.log(
-        "updated order item inside new order update: " +
-          JSON.stringify(orderItem)
-      );
-    }
-
-    //after that, update the order in the database
-    const orderTotalPrice =
-      data.orderData.orderTotalPrice + orderItem.foodTotalPrice;
-
-    console.log("order total price: " + orderTotalPrice);
-    console.log("order data total price: " + JSON.stringify(data.orderData));
-    console.log("new order total price: " + orderItem.foodTotalPrice);
-    console.log("updated order item: " + JSON.stringify(orderItem));
-
-    const orderInfo = {
-      _id: orderId,
-      orderTotalPrice: orderTotalPrice,
-      orderItem: orderItem,
-    };
-
-    //checkpoint here
-    console.log("order Info: " + JSON.stringify(orderInfo));
-
-    const response = await CustomerAPI.updateOrder(orderInfo);
-
-    if (response.success) {
-      //maybe trigger the pop up message
-      console.log(JSON.stringify(response));
-    } else {
-      console.log(response.msg + ": " + response.error);
-    }
-
-    setIsLoading(false);
-  };
-
-  const CustomerFooter = (props) => (
-    //counter and order button
-    <Layout
-      {...props}
-      style={[
-        props.style,
-        { flexDirection: "row", justifyContent: "flex-start" },
-      ]}
-    >
-      <TouchableOpacity onPress={minusCountHandler}>
-        <MinusCountIcon />
-      </TouchableOpacity>
-      <Text
-        style={{ marginLeft: 20, marginRight: 20, marginTop: 5, fontSize: 18 }}
-      >
-        {count}
-      </Text>
-      <TouchableOpacity onPress={addCountHandler}>
-        <AddCountIcon />
-      </TouchableOpacity>
-      <Button
-        size="small"
-        status="success"
-        onPress={handleAddToOrder}
-        style={{ flex: 1, marginLeft: 50 }}
-      >
-        {isLoading ? <Spinner status="control" /> : "ADD TO ORDER"}
       </Button>
     </Layout>
   );
@@ -539,9 +411,7 @@ function FoodDetails({ route, navigation }) {
                 style={styles.card}
                 header={(props) => Header(props)}
                 footer={
-                  data.role === "customer"
-                    ? (props) => CustomerFooter(props)
-                    : (props) => Footer(props)
+                  data.role === "customer" ? null : (props) => Footer(props)
                 }
               >
                 <Layout style={styles.textDetailsContainer}>

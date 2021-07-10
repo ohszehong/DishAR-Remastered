@@ -34,7 +34,6 @@ class MenuList extends Component {
       foodThumbnailUrls: [],
       navigation: navigation,
       refreshing: false,
-      orderData: null,
     };
   }
 
@@ -50,7 +49,6 @@ class MenuList extends Component {
 
     if (restaurantOwnerData.role === "customer") {
       data.role = "customer";
-      data.orderData = orderData;
     }
 
     return (
@@ -163,21 +161,6 @@ class MenuList extends Component {
     this.setState({ isLoading: true });
 
     const { restaurantOwnerData } = this.state;
-
-    //if accessed by customer, generate new order for them
-    if (restaurantOwnerData.role === "customer") {
-      const response = await CustomerAPI.createOrder({
-        _id: restaurantOwnerData._id,
-      });
-
-      if (response.success) {
-        this.setState({
-          orderData: response.data,
-        });
-      } else {
-        console.log(response.msg + ": " + response.error);
-      }
-    }
 
     await this.startUp(restaurantOwnerData);
 

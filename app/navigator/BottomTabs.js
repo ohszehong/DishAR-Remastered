@@ -47,14 +47,6 @@ export const LogoutIcon = (props) => (
   />
 );
 
-export const OrderIcon = (props) => (
-  <Icon
-    name="shoppingcart"
-    {...props}
-    style={[props.style, { height: 25, width: 25 }]}
-  />
-);
-
 const BottomTabBar = ({ navigation, state, restaurantOwnerData }) => {
   return (
     <BottomNavigation
@@ -86,7 +78,6 @@ const CustomerBottomTabBar = ({ navigation, state, restaurantOwnerData }) => {
       style={styles.bottomTabBar}
     >
       <BottomNavigationTab title="MENU" icon={MenuIcon} />
-      <BottomNavigationTab title="ORDER" icon={OrderIcon} />
       <BottomNavigationTab title="QUIT" icon={LogoutIcon} />
     </BottomNavigation>
   );
@@ -108,8 +99,6 @@ const TabNavigator = ({ restaurantOwnerData }) => {
           children={(props) => <BetweenFoodAndDetails {...props} />}
           initialParams={restaurantOwnerData}
         />
-        <Screen name="CustomerOrder" component={CustomerOrder} />
-        {/* here later add screen for order and quit */}
       </Navigator>
     );
   } else {
