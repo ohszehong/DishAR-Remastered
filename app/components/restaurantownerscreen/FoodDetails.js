@@ -34,6 +34,8 @@ function FoodDetails({ route, navigation }) {
   //restaurant owner data
   const { data } = route.params;
 
+  console.log("data here: " + JSON.stringify(data));
+
   //header and footer for card
   const Header = (props) => (
     <Layout {...props}>
@@ -42,7 +44,7 @@ function FoodDetails({ route, navigation }) {
           {data.foodName}
         </Text>
         <TouchableOpacity
-          onPress={() => navigation.push("FoodARScene", { data })}
+          onPress={() => navigation.navigate("FoodARScene", { foodData: data })}
         >
           <Image source={require("../../assets/arIcon.png")} />
         </TouchableOpacity>

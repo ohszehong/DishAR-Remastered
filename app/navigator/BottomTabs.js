@@ -11,7 +11,6 @@ import AddFoodForm from "./../components/restaurantownerscreen/AddFoodForm";
 import ViewQR from "./../components/restaurantownerscreen/ViewQR";
 import MenuList from "../components/restaurantownerscreen/MenuList";
 import BetweenFoodAndDetails from "../components/restaurantownerscreen/BetweenFoodAndDetails";
-import CustomerOrder from "../components/customerdedicatedscreen/CustomerOrder";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -99,6 +98,12 @@ const TabNavigator = ({ restaurantOwnerData }) => {
           children={(props) => <BetweenFoodAndDetails {...props} />}
           initialParams={restaurantOwnerData}
         />
+
+        {/* <Screen
+          name="MenuList"
+          children={(props) => <MenuList {...props} />}
+          initialParams={restaurantOwnerData}
+        /> */}
       </Navigator>
     );
   } else {

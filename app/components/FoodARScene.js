@@ -1,21 +1,28 @@
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
-import {
-  ViroText,
-  ViroScene,
-  ViroARScene,
-  ViroUtils,
-} from "@akadrimer/react-viro";
+import { StyleSheet, BackHandler } from "react-native";
+import { ViroUtils, ViroARSceneNavigator } from "@akadrimer/react-viro";
+
+import FoodActualARScene from "./FoodActualARScene";
 
 class FoodARScene extends Component {
-  constructor(props) {
-    super(props);
+  constructor({ navigation, route }) {
+    super();
+    this.state = {
+      navigation: navigation,
+      foodData: route.params.foodData,
+    };
   }
-  componentDidMount() {
+
+  async componentDidMount() {
     ViroUtils.isARSupportedOnDevice(
       this._handleARNotSupported,
       this._handleARSupported
     );
+
+    // BackHandler.addEventListener(
+    //   "hardwareBackPress",
+    //   this.handleBackButtonClick
+    // );
   }
 
   _handleARSupported() {
@@ -26,27 +33,40 @@ class FoodARScene extends Component {
     console.log("AR not supported, with reason: " + reason);
   }
 
+  // componentWillUnmount() {
+  //   BackHandler.removeEventListener(
+  //     "hardwareBackPress",
+  //     this.handleBackButtonClick
+  //   );
+  // }
+
+  // handleBackButtonClick = () => {
+  //   const { navigation, foodData } = this.state;
+
+  //   console.log("Pressed back button." + JSON.stringify(foodData));
+
+  //   navigation.push("FoodDetails", { data: foodData });
+  //   return true;
+  // };
+
   render() {
+    let { foodData } = this.state;
+
     return (
-      <ViroARScene>
-        <ViroText
-          text={"Hello World"}
-          scale={[0.5, 0.5, 0.5]}
-          position={[0, 0, -1]}
-          style={styles.helloWorldTextStyle}
-        />
-      </ViroARScene>
+      <ViroARSceneNavigator
+        style={styles.arView}
+        initialScene={{
+          scene: FoodActualARScene,
+        }}
+        viroAppProps={{ foodData: foodData }}
+      />
     );
   }
 }
 
 const styles = StyleSheet.create({
-  helloWorldTextStyle: {
-    fontFamily: "Arial",
-    fontSize: 30,
-    color: "#ffffff",
-    textAlignVertical: "center",
-    textAlign: "center",
+  arView: {
+    flex: 1,
   },
 });
 

@@ -21,7 +21,6 @@ import { SharedElement } from "react-navigation-shared-element";
 import EmptyListIcon from "../../icons/EmptyListIcon";
 import MenuAPI from "../../api/shared/menu-caller";
 import FoodAPI from "../../api/shared/food-caller";
-import CustomerAPI from "../../api/customer-caller";
 import PriceIcon from "../../icons/PriceIcon";
 
 class MenuList extends Component {
