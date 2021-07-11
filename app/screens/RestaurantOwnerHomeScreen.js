@@ -4,6 +4,7 @@ import TabNavigator from "../navigator/BottomTabs";
 class RestaurantOwnerHomeScreen extends Component {
   constructor({ navigation, route, ...props }) {
     super();
+
     this.state = {
       restaurantOwnerData: route.data,
     };

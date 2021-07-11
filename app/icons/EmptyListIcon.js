@@ -23,7 +23,7 @@ function EmptyListIcon(props) {
         ]}
       />
       <Text category="h5" style={{ textAlign: "center", color: colors.empty }}>
-        No Result
+        No Result, Tap me to refresh list.
       </Text>
     </React.Fragment>
   );

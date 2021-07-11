@@ -6,6 +6,7 @@ import { createSharedElementStackNavigator } from "react-navigation-shared-eleme
 //screens
 import FoodDetails from "../components/restaurantownerscreen/FoodDetails";
 import MenuList from "./../components/restaurantownerscreen/MenuList";
+import FoodARScene from "../components/FoodARScene";
 
 const Stack = createSharedElementStackNavigator();
 
@@ -37,6 +38,7 @@ const FoodDetailsStacks = ({ restaurantOwnerData }) => {
           return [data._id];
         }}
       />
+      <Stack.Screen name="FoodARScene" component={FoodARScene} />
     </Stack.Navigator>
   );
 };

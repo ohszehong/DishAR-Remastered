@@ -1,10 +1,10 @@
 export default {
   FirebaseConfig: {
-    apiKey: "AIzaSyDYqCN0aMMhkyeJG_MCT65d6Kb59LQtpkc",
-    authDomain: "dishar-15259.firebaseapp.com",
-    projectId: "dishar-15259",
-    storageBucket: "dishar-15259.appspot.com",
-    messagingSenderId: "1023027662093",
-    appId: "1:1023027662093:web:8e04cfd4a6ac7f75fbf444",
+    apiKey: "AIzaSyCTjnzW6r_6OFG6lXQf6531ed5qy2EDw5U",
+    authDomain: "dishar-remastered.firebaseapp.com",
+    projectId: "dishar-remastered",
+    storageBucket: "dishar-remastered.appspot.com",
+    messagingSenderId: "483978881487",
+    appId: "1:483978881487:web:d4cb9dacb1cb3c50504aba",
   },
 };

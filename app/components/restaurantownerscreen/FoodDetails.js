@@ -6,12 +6,16 @@ import {
   Dimensions,
   Animated,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import {
-  Text, Card, Layout, Button, Divider,
+  Text,
+  Card,
+  Layout,
+  Button,
+  Divider,
   Input,
   Spinner,
-  Modal
 } from "@ui-kitten/components";
 import { SharedElement } from "react-navigation-shared-element";
 import { StackActions } from "@react-navigation/routers";
@@ -26,12 +30,22 @@ import { inputRegexValidation } from "../../utilities/inputRegexes";
 import RoAPI from "../../api/restaurant-owner-caller";
 
 function FoodDetails({ route, navigation }) {
+  //restaurant owner data
+  const { data } = route.params;
+
   //header and footer for card
-  const Header = (props, data) => (
+  const Header = (props) => (
     <Layout {...props}>
-      <Text category="h2" style={{ fontWeight: "bold" }}>
-        {data.foodName}
-      </Text>
+      <Layout style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text category="h2" style={{ fontWeight: "bold" }}>
+          {data.foodName}
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("FoodARScene", { foodData: data })}
+        >
+          <Image source={require("../../assets/arIcon.png")} />
+        </TouchableOpacity>
+      </Layout>
       <Layout style={styles.priceContainer}>
         <Text category="h5">RM {data.foodPrice}</Text>
         <PriceIcon
@@ -51,13 +65,21 @@ function FoodDetails({ route, navigation }) {
       >
         <EditIcon style={{ width: 23, height: 23 }} />
       </Button>
-      <Button size="tiny" status="danger" onPress={() => handleSetUpConfirmDialog("Are you sure you want to delete?")}>
-        {isLoading ? <Spinner status="control" /> : <DeleteIcon style={{ width: 23, height: 23 }} /> }
+      <Button
+        size="tiny"
+        status="danger"
+        onPress={() =>
+          handleSetUpConfirmDialog("Are you sure you want to delete?")
+        }
+      >
+        {isLoading ? (
+          <Spinner status="control" />
+        ) : (
+          <DeleteIcon style={{ width: 23, height: 23 }} />
+        )}
       </Button>
     </Layout>
   );
-
-  const { data } = route.params;
 
   //input data update for edit form
   const [foodPrice, setFoodPrice] = useState(data.foodPrice.toString());
@@ -71,7 +93,9 @@ function FoodDetails({ route, navigation }) {
   const [foodCarbohydrates, setFoodCarbohydrates] = useState(
     data.foodNutritionalFacts.foodCarbohydrates.toString()
   );
-  const [foodFat, setFoodFat] = useState(data.foodNutritionalFacts.foodFat.toString());
+  const [foodFat, setFoodFat] = useState(
+    data.foodNutritionalFacts.foodFat.toString()
+  );
   const [foodIngredients, setFoodIngredients] = useState(data.foodIngredients);
 
   //prompt edit form
@@ -82,7 +106,7 @@ function FoodDetails({ route, navigation }) {
   const [editSuccess, setEditSuccess] = useState(null);
   const [popUpMsg, setPopUpMsg] = useState("");
 
-  //pop up msg - confirm msg props 
+  //pop up msg - confirm msg props
   const [promptConfirmMsg, setPromptConfirmMsg] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState(null);
   const [confirmMsg, setConfirmMsg] = useState("");
@@ -90,18 +114,26 @@ function FoodDetails({ route, navigation }) {
   const handleSetUpConfirmDialog = (msg) => {
     setPromptConfirmMsg(true);
     setConfirmMsg(msg);
-  }
+  };
 
   const handleClosePopUpModal = () => {
     setPromptPopUpMsg(false);
     navigation.dispatch(StackActions.pop(1));
-  }
- 
+  };
+
+  const handleCancelEditForm = () => {
+    setPromptEditForm(false);
+    navigation.dispatch(StackActions.pop(1));
+  };
+
   //loading signal
   const [isLoading, setIsLoading] = useState(false);
 
-  //error fields signal 
-  const [inputError, setInputError] = useState({ errorField: null, errorMsg: null })
+  //error fields signal
+  const [inputError, setInputError] = useState({
+    errorField: null,
+    errorMsg: null,
+  });
 
   const validateFormData = () => {
     var validate = false;
@@ -199,7 +231,7 @@ function FoodDetails({ route, navigation }) {
   const deleteAsset = async (filePath) => {
     let ref = firebase.default.storage().ref().child(filePath);
     ref.delete();
-  }
+  };
 
   const handleDeleteFood = async () => {
     setIsLoading(true);
@@ -209,29 +241,27 @@ function FoodDetails({ route, navigation }) {
     const roAndFoodInfo = {
       restaurantOwnerId: data.restaurantOwnerId,
       foodId: data._id,
-    }
+    };
 
     const response = await RoAPI.deleteFoodFromMenu(roAndFoodInfo);
 
-    if(response.success) {
-      //delete food blob data in firebase 
-      await deleteAsset(data.foodModelAssets.foodObjFilePath);
-      await deleteAsset(data.foodModelAssets.foodMtlFilePath);
-      await deleteAsset(data.foodModelAssets.foodTextureFilePath);
+    if (response.success) {
+      //delete food blob data in firebase
+      await deleteAsset(data.foodModelAssets.foodObjFirebaseFilePath);
+      await deleteAsset(data.foodModelAssets.foodMtlFirebaseFilePath);
+      await deleteAsset(data.foodModelAssets.foodTextureFirebaseFilePath);
       await deleteAsset(data.foodThumbnailFilePath);
 
       setPopUpMsg(response.msg);
       setDeleteSuccess(true);
       setPromptPopUpMsg(true);
-    }
-    else {
+    } else {
       setPopUpMsg(response.msg);
       setDeleteSuccess(false);
       setPromptPopUpMsg(true);
       console.log("error: " + response.error);
     }
-
-  }
+  };
 
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -246,11 +276,9 @@ function FoodDetails({ route, navigation }) {
 
   return (
     <React.Fragment>
-      {promptEditForm ?
+      {promptEditForm ? (
         <Layout level="2" style={styles.registerForm}>
-          <ScrollView
-            contentContainerStyle={{ alignItems: "center" }}
-          >
+          <ScrollView contentContainerStyle={{ alignItems: "center" }}>
             <Text category="h5">EDIT DETAILS</Text>
             <Divider style={styles.divider} />
             <Layout style={styles.formInputContainer}>
@@ -306,7 +334,9 @@ function FoodDetails({ route, navigation }) {
                 Carbohydrates:
               </Text>
               <Input
-                status={inputError.errorField === "foodCarbohydrates" && "danger"}
+                status={
+                  inputError.errorField === "foodCarbohydrates" && "danger"
+                }
                 onChangeText={(text) => setFoodCarbohydrates(text)}
                 textStyle={styles.formInput}
                 placeholder="Food Carbohydrates (g) e.g. 45"
@@ -345,18 +375,27 @@ function FoodDetails({ route, navigation }) {
             )}
 
             <Layout style={styles.formInputContainer}>
-              <Button size="large" status="success" onPress={handleEditFoodDetails}>
+              <Button
+                size="large"
+                status="success"
+                onPress={handleEditFoodDetails}
+              >
                 {isLoading ? <Spinner status="control" /> : "EDIT"}
               </Button>
             </Layout>
             <Layout style={{ marginBottom: 15, ...styles.formInputContainer }}>
-              <Button size="large" status="danger" onPress={() => setPromptEditForm(false)}>
+              <Button
+                size="large"
+                status="danger"
+                onPress={handleCancelEditForm}
+              >
                 CANCEL
               </Button>
             </Layout>
           </ScrollView>
         </Layout>
-        : <Animated.View
+      ) : (
+        <Animated.View
           style={{ opacity, flex: 1, paddingTop: StatusBar.currentHeight }}
         >
           <SharedElement id={data._id}>
@@ -369,8 +408,10 @@ function FoodDetails({ route, navigation }) {
             <ScrollView>
               <Card
                 style={styles.card}
-                header={(props) => Header(props, data)}
-                footer={Footer}
+                header={(props) => Header(props)}
+                footer={
+                  data.role === "customer" ? null : (props) => Footer(props)
+                }
               >
                 <Layout style={styles.textDetailsContainer}>
                   <Text style={{ fontSize: 17, fontWeight: "bold" }}>
@@ -378,7 +419,9 @@ function FoodDetails({ route, navigation }) {
                   </Text>
                   <Text style={{ fontSize: 17 }}>{data.foodDesc}</Text>
                 </Layout>
-                <Layout style={{ marginTop: 10, ...styles.textDetailsContainer }}>
+                <Layout
+                  style={{ marginTop: 10, ...styles.textDetailsContainer }}
+                >
                   <Text style={{ fontSize: 17, fontWeight: "bold" }}>
                     Ingredients:{" "}
                   </Text>
@@ -390,8 +433,7 @@ function FoodDetails({ route, navigation }) {
             </ScrollView>
           </Layout>
         </Animated.View>
-      }
-
+      )}
 
       <PopUpMsg
         promptConfirmMsg={promptConfirmMsg}
@@ -434,12 +476,12 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   errorMsg: {
-    alignSelf:"flex-start",
-    paddingLeft: 25,
+    alignSelf: "flex-start",
     paddingRight: 25,
     color: colors.error,
     fontSize: 15,
     marginTop: 10,
+    width: 320,
   },
   formInput: {
     fontSize: 19,
@@ -450,14 +492,15 @@ const styles = StyleSheet.create({
     minHeight: 70,
   },
   formInputContainer: {
-    width: "90%",
+    width: 320,
     marginTop: 20,
+    marginRight: 15,
   },
   registerForm: {
     borderRadius: 25,
     height: Dimensions.get("screen").height - 100,
     paddingTop: 40,
-    padding:25,
+    paddingBottom: 60,
     alignItems: "center",
   },
 });

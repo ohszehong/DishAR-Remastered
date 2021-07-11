@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { StyleSheet, StatusBar, Dimensions, Image } from "react-native";
+import {
+  StyleSheet,
+  StatusBar,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import {
   Layout,
   Text,
@@ -38,6 +44,10 @@ class MenuList extends Component {
     data.restaurantOwnerId = restaurantOwnerData._id;
 
     data.thumbnailUrl = foodThumbnailUrls[foodData.index];
+
+    if (restaurantOwnerData.role === "customer") {
+      data.role = "customer";
+    }
 
     return (
       <Card
@@ -108,6 +118,7 @@ class MenuList extends Component {
   };
 
   startUp = async (restaurantOwnerData) => {
+    this.setState({ isLoading: true });
     //fetch all the foods
     const responseRetrievingMenu = await MenuAPI.retrieveMenu({
       _id: restaurantOwnerData._id,
@@ -141,7 +152,7 @@ class MenuList extends Component {
       );
     }
 
-    this.setState({ refreshing: false });
+    this.setState({ refreshing: false, isLoading: false });
   };
 
   async componentDidMount() {
@@ -200,7 +211,9 @@ class MenuList extends Component {
           {isLoading ? (
             <Spinner status="success" size="giant" />
           ) : foodItems.length <= 0 ? (
-            <EmptyListIcon />
+            <TouchableOpacity onPress={() => this.startUp(restaurantOwnerData)}>
+              <EmptyListIcon />
+            </TouchableOpacity>
           ) : (
             <List
               style={styles.listContainer}
