@@ -8,6 +8,7 @@ import * as firebase from "firebase";
 import Constants from "./app/Constants";
 import { default as theme } from "./theme.json";
 import Stacks from "./app/navigator/Stacks";
+import { default as mapping } from "./mapping.json";
 
 LogBox.ignoreLogs([
   "Unable to deactivate keep awake. However, it probably is deactivated already.",
@@ -27,7 +28,11 @@ export default class App extends Component {
     return (
       <>
         <IconRegistry icons={AntDesignIconsPack} />
-        <ApplicationProvider {...eva} theme={{ ...eva.light, ...theme }}>
+        <ApplicationProvider
+          {...eva}
+          theme={{ ...eva.light, ...theme }}
+          customMapping={mapping}
+        >
           <Stacks />
         </ApplicationProvider>
       </>
