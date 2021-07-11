@@ -72,6 +72,72 @@ function AddFoodForm({ navigation, route }) {
     return ref.put(blob);
   };
 
+  const writeToWorkspace = async (
+    fileType,
+    firebaseChildRef,
+    foodTextureFileName
+  ) => {
+    //filepath for fs createWriteStream to write the file
+    //here the workspace filepath is slightly different than the workspace filepath stored in the database
+    //so it is best to recreate another variable for it
+
+    let foodWorkspaceFilePath = null;
+    const constantWorkspaceFilePath =
+      "./app/assets/" + restaurantOwnerData._id + "/" + foodName + "/";
+
+    const storage = firebase.default.storage();
+    const storageRef = storage.ref();
+    const fileRef = storageRef.child(firebaseChildRef);
+
+    if (fileType === "obj") {
+      foodWorkspaceFilePath = constantWorkspaceFilePath + foodObjFile.fileName;
+
+      fileRef.getDownloadURL().then(async (url) => {
+        console.log("download url: " + url);
+        let response = await RoAPI.uploadFilesToWorkspace({
+          foodObjWorkspaceFilePath: foodWorkspaceFilePath,
+          foodObjFirebaseFileUrl: url,
+          restaurantOwnerDirectory: constantWorkspaceFilePath,
+        });
+        if (response.success) {
+          console.log("uploaded obj file successfully.");
+        }
+      });
+    } else if (fileType === "mtl") {
+      foodWorkspaceFilePath = constantWorkspaceFilePath + foodMtlFile.fileName;
+
+      fileRef.getDownloadURL().then(async (url) => {
+        console.log("download url: " + url);
+        let response = await RoAPI.uploadFilesToWorkspace({
+          foodObjWorkspaceFilePath: foodWorkspaceFilePath,
+          foodObjFirebaseFileUrl: url,
+          restaurantOwnerDirectory: constantWorkspaceFilePath,
+        });
+        if (response.success) {
+          console.log("uploaded obj file successfully.");
+        }
+      });
+    } else if (fileType === "texture") {
+      foodWorkspaceFilePath = constantWorkspaceFilePath + foodTextureFileName;
+
+      fileRef.getDownloadURL().then(async (url) => {
+        console.log("download url: " + url);
+        let response = await RoAPI.uploadFilesToWorkspace({
+          foodObjWorkspaceFilePath: foodWorkspaceFilePath,
+          foodObjFirebaseFileUrl: url,
+          restaurantOwnerDirectory: constantWorkspaceFilePath,
+        });
+        if (response.success) {
+          console.log("uploaded obj file successfully.");
+        }
+      });
+    }
+
+    //directory to store food obj, mtl and texture to the server
+    // const restaurantOwnerDirectory =
+    //       "./app/assets/" + restaurantOwnerId + "/" + "Teisyoku";
+  };
+
   const handleChooseFoodObj = async () => {
     setIsLoading("foodObjFile");
 
@@ -260,6 +326,7 @@ function AddFoodForm({ navigation, route }) {
         foodThumbnailFile.lastIndexOf(".") + 1
       );
 
+      /* ---------------------- generate resources filepath for firebase -------------------------*/
       let foodThumbnailFilePath =
         restaurantOwnerId +
         "/" +
@@ -274,7 +341,7 @@ function AddFoodForm({ navigation, route }) {
         /\.[^/.]+$/,
         ""
       );
-      let foodTextureFilePath =
+      let foodTextureFirebaseFilePath =
         restaurantOwnerId +
         "/" +
         foodName +
@@ -283,20 +350,48 @@ function AddFoodForm({ navigation, route }) {
         "." +
         foodTextureFileExtension;
 
-      //generate file path for both obj and mtl files
-      let foodObjFilePath =
+      let foodObjFirebaseFilePath =
         restaurantOwnerId + "/" + foodName + "/" + foodObjFile.fileName;
-      let foodMtlFilePath =
+      let foodMtlFirebaseFilePath =
         restaurantOwnerId + "/" + foodName + "/" + foodMtlFile.fileName;
+
+      /* ----------------- resources filepath to store in database (should point to workspace directory instead) ----------------*/
+      let foodTextureFileName =
+        foodObjFileNameWithoutExtension + "." + foodTextureFileExtension;
+
+      let foodObjWorkspaceFilePath =
+        "./../assets/" +
+        restaurantOwnerId +
+        "/" +
+        foodName +
+        "/" +
+        foodObjFile.fileName;
+      let foodMtlWorkspaceFilePath =
+        "./../assets/" +
+        restaurantOwnerId +
+        "/" +
+        foodName +
+        "/" +
+        foodMtlFile.fileName;
+      let foodTextureWorkspaceFilePath =
+        "./../assets/" +
+        restaurantOwnerId +
+        "/" +
+        foodName +
+        "/" +
+        foodTextureFileName;
 
       let data = {
         restaurantOwnerId: restaurantOwnerData._id,
         foodName: foodName,
         foodPrice: foodPrice,
         foodModelAssets: {
-          foodObjFilePath: foodObjFilePath,
-          foodMtlFilePath: foodMtlFilePath,
-          foodTextureFilePath: foodTextureFilePath,
+          foodObjFirebaseFilePath: foodObjFirebaseFilePath,
+          foodObjWorkspaceFilePath: foodObjWorkspaceFilePath,
+          foodMtlFirebaseFilePath: foodMtlFirebaseFilePath,
+          foodMtlWorkspaceFilePath: foodMtlWorkspaceFilePath,
+          foodTextureFirebaseFilePath: foodTextureFirebaseFilePath,
+          foodTextureWorkspaceFilePath: foodTextureWorkspaceFilePath,
         },
         foodThumbnailFilePath: foodThumbnailFilePath,
         foodNutritionalFacts: {
@@ -311,11 +406,20 @@ function AddFoodForm({ navigation, route }) {
 
       const response = await RoAPI.addFoodToMenu(data);
       if (response.success) {
-        //upload files to firebase storage
-        await uploadAsset(foodObjFile.fileUri, foodObjFilePath);
-        await uploadAsset(foodMtlFile.fileUri, foodMtlFilePath);
-        await uploadAsset(foodTextureFile, foodTextureFilePath);
+        //upload files to firebase storage first
+        await uploadAsset(foodObjFile.fileUri, foodObjFirebaseFilePath);
+        await uploadAsset(foodMtlFile.fileUri, foodMtlFirebaseFilePath);
+        await uploadAsset(foodTextureFile, foodTextureFirebaseFilePath);
         await uploadAsset(foodThumbnailFile, foodThumbnailFilePath);
+
+        //after uploaded the files, write those files to the server/workspace
+        await writeToWorkspace("obj", foodObjFirebaseFilePath);
+        await writeToWorkspace("mtl", foodMtlFirebaseFilePath);
+        await writeToWorkspace(
+          "texture",
+          foodTextureFirebaseFilePath,
+          foodTextureFileName
+        );
 
         setSubmitSuccess(true);
       } else {
@@ -525,7 +629,13 @@ function AddFoodForm({ navigation, route }) {
             </Button>
           </Layout>
 
-          <Layout style={{ ...styles.formInputContainer, height: 25, marginBottom: 50 }}></Layout>
+          <Layout
+            style={{
+              ...styles.formInputContainer,
+              height: 25,
+              marginBottom: 50,
+            }}
+          ></Layout>
         </ScrollView>
       </Layout>
 
@@ -534,7 +644,7 @@ function AddFoodForm({ navigation, route }) {
         onPressConfirm={handleSubmitAddFood}
         onPressCancelConfirm={() => setPromptConfirmMessage(false)}
         confirmMsg={
-          "Please ensure that the .obj, .mtl and texture file are of the same name and are mapped properly."
+          "Please ensure that the .obj, .mtl and texture file has the same name and are mapped correctly before upload!"
         }
         visible={submitSuccess}
         success={submitSuccess}

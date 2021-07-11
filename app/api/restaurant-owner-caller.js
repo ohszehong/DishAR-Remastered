@@ -50,30 +50,46 @@ const editFoodDetails = async (foodInfo) => {
 };
 
 const deleteFoodFromMenu = async (roAndFoodInfo) => {
-
   return await axios
-  .post(HOST_URL + "/api/restaurant-owner/delete-food-from-menu", roAndFoodInfo)
-  .then((res) => {
-    const data = res.data;
-    return data;
-  }).catch((err) => {
-    return err.response.data;
-  })
-
-}
+    .post(
+      HOST_URL + "/api/restaurant-owner/delete-food-from-menu",
+      roAndFoodInfo
+    )
+    .then((res) => {
+      const data = res.data;
+      return data;
+    })
+    .catch((err) => {
+      return err.response.data;
+    });
+};
 
 const getRestaurantOwner = async (roId) => {
-
   return await axios
-  .post(HOST_URL + "/api/restaurant-owner/get-restaurant-owner", roId)
-  .then((res) => {
-    const data = res.data;
-    return data;
-  }).catch((err) => {
-    return err.response.data;
-  })
+    .post(HOST_URL + "/api/restaurant-owner/get-restaurant-owner", roId)
+    .then((res) => {
+      const data = res.data;
+      return data;
+    })
+    .catch((err) => {
+      return err.response.data;
+    });
+};
 
-}
+const uploadFilesToWorkspace = async (filesInfo) => {
+  return await axios
+    .post(
+      HOST_URL + "/api/restaurant-owner/upload-files-to-workspace",
+      filesInfo
+    )
+    .then((res) => {
+      const data = res.data;
+      return data;
+    })
+    .catch((err) => {
+      return err.response.data;
+    });
+};
 
 export default {
   registerRO,
@@ -82,4 +98,5 @@ export default {
   editFoodDetails,
   deleteFoodFromMenu,
   getRestaurantOwner,
+  uploadFilesToWorkspace,
 };

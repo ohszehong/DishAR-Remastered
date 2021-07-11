@@ -31,10 +31,7 @@ const Stacks = () => {
           name="RestaurantOwner"
           component={RestaurantOwnerHomeScreen}
         />
-        <Stack.Screen
-          name="QRCodeScanner"
-          component={QRCodeScannerScreen}
-        />
+        <Stack.Screen name="QRCodeScanner" component={QRCodeScannerScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

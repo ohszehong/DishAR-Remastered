@@ -6,6 +6,19 @@ const Menu = require("../../models/Menu");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 
+var https = require("https");
+var fs = require("fs");
+
+var download = function (url, dest, cb) {
+  var file = fs.createWriteStream(dest);
+  https.get(url, function (response) {
+    response.pipe(file);
+    file.on("finish", function () {
+      file.close(cb);
+    });
+  });
+};
+
 router.post("/register-restaurant-owner", (req, res) => {
   let restaurantOwner = new RestaurantOwner({
     username: req.body.username,
@@ -33,14 +46,12 @@ router.post("/register-restaurant-owner", (req, res) => {
 });
 
 router.post("/get-restaurant-owner", (req, res) => {
-
   const restaurantOwnerId = req.body._id;
 
   RestaurantOwner.findById(
     restaurantOwnerId,
     { password: 0 },
     (err, results) => {
-
       if (err) {
         return res
           .status(500)
@@ -132,12 +143,22 @@ router.post("/add-food-to-menu", (req, res) => {
   const restaurantOwnerId = req.body.restaurantOwnerId;
   const foodName = req.body.foodName;
 
-  //get all the file paths
-  const foodObjFilePath = req.body.foodModelAssets.foodObjFilePath;
+  //get all the file paths (firebase and workspace)
+  const foodObjFirebaseFilePath =
+    req.body.foodModelAssets.foodObjFirebaseFilePath;
+  const foodObjWorkspaceFilePath =
+    req.body.foodModelAssets.foodObjWorkspaceFilePath;
 
-  const foodMtlFilePath = req.body.foodModelAssets.foodMtlFilePath;
+  const foodMtlFirebaseFilePath =
+    req.body.foodModelAssets.foodMtlFirebaseFilePath;
+  const foodMtlWorkspaceFilePath =
+    req.body.foodModelAssets.foodMtlWorkspaceFilePath;
 
-  const foodTextureFilePath = req.body.foodModelAssets.foodTextureFilePath;
+  const foodTextureFirebaseFilePath =
+    req.body.foodModelAssets.foodTextureFirebaseFilePath;
+  const foodTextureWorkspaceFilePath =
+    req.body.foodModelAssets.foodTextureWorkspaceFilePath;
+
   const foodThumbnailFilePath = req.body.foodThumbnailFilePath;
 
   //then, save the data to the database
@@ -156,9 +177,12 @@ router.post("/add-food-to-menu", (req, res) => {
     foodName: foodName,
     foodPrice: foodPrice,
     foodModelAssets: {
-      foodObjFilePath: foodObjFilePath,
-      foodMtlFilePath: foodMtlFilePath,
-      foodTextureFilePath: foodTextureFilePath,
+      foodObjFirebaseFilePath: foodObjFirebaseFilePath,
+      foodObjWorkspaceFilePath: foodObjWorkspaceFilePath,
+      foodMtlFirebaseFilePath: foodMtlFirebaseFilePath,
+      foodMtlWorkspaceFilePath: foodMtlWorkspaceFilePath,
+      foodTextureFirebaseFilePath: foodTextureFirebaseFilePath,
+      foodTextureWorkspaceFilePath: foodTextureWorkspaceFilePath,
     },
     foodThumbnailFilePath: foodThumbnailFilePath,
     foodNutritionalFacts: {
@@ -222,50 +246,87 @@ router.post("/edit-food-details", (req, res) => {
     },
     (err, results) => {
       if (err) {
-        return res
-          .status(500)
-          .json({
-            success: false,
-            error: err,
-            msg: "Internal server error when updating food details.",
-          });
-      }
-      return res
-        .status(200)
-        .json({
-          success: true,
-          data: results,
-          msg: "Successfully update food details.",
+        return res.status(500).json({
+          success: false,
+          error: err,
+          msg: "Internal server error when updating food details.",
         });
+      }
+      return res.status(200).json({
+        success: true,
+        data: results,
+        msg: "Successfully update food details.",
+      });
     }
   );
 });
 
 router.post("/delete-food-from-menu", (req, res) => {
-
-  //delete data in Food collection 
+  //delete data in Food collection
   const restaurantOwnerId = req.body.restaurantOwnerId;
   const foodId = mongoose.Types.ObjectId(req.body.foodId);
 
   Food.findByIdAndDelete(foodId, (err, results) => {
-    if(err) {
-      return res.status(500).json({success: false, error: err, msg: "Internal server error when deleting food from menu."});
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: err,
+        msg: "Internal server error when deleting food from menu.",
+      });
     }
-    
-  })
+  });
 
-      //if success, delete food id in Menu collection 
-  Menu.updateOne({ownedBy: restaurantOwnerId}, {$pull: {menuItems: foodId}}, (err,results) => {
-    if(err) {
-      return res.status(500).json({success: false, error: err, msg: "Internal server error when removing food Id from menu."});
-    }
-        
-    if(results.nModified === 0) {
-      return res.status(400).json({success: false, msg: "Already deleted from database, please refresh the menu in menu section."});
-    }
-    return res.status(200).json({success: true, data: results, msg: "Successfully delete food from menu."});
-  })
+  //if success, delete food id in Menu collection
+  Menu.updateOne(
+    { ownedBy: restaurantOwnerId },
+    { $pull: { menuItems: foodId } },
+    (err, results) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: err,
+          msg: "Internal server error when removing food Id from menu.",
+        });
+      }
 
+      if (results.nModified === 0) {
+        return res.status(400).json({
+          success: false,
+          msg: "Already deleted from database, please refresh the menu in menu section.",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        data: results,
+        msg: "Successfully delete food from menu.",
+      });
+    }
+  );
+});
+
+router.post("/upload-files-to-workspace", (req, res) => {
+  const foodObjWorkspaceFilePath = req.body.foodObjWorkspaceFilePath;
+  const foodObjFirebaseFileUrl = req.body.foodObjFirebaseFileUrl;
+  const restaurantOwnerDirectory = req.body.restaurantOwnerDirectory;
+
+  //check if directory to the restaurant owner folder exists first
+  if (!fs.existsSync(restaurantOwnerDirectory)) {
+    fs.mkdirSync(restaurantOwnerDirectory, { recursive: true });
+  }
+
+  download(foodObjFirebaseFileUrl, foodObjWorkspaceFilePath, (err) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        error: err,
+        msg: "Internal server error when uploading files to workspace.",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      msg: "Successfully uploaded files to workspace.",
+    });
+  });
 });
 
 module.exports = router;

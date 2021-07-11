@@ -3,6 +3,8 @@ import { StyleSheet, BackHandler } from "react-native";
 import { ViroUtils, ViroARSceneNavigator } from "@akadrimer/react-viro";
 
 import FoodActualARScene from "./FoodActualARScene";
+import ArNotSupportedIcon from "../icons/ArNotSupportedIcon";
+import QuittingArIcon from "../icons/QuittingArIcon";
 
 class FoodARScene extends Component {
   constructor({ navigation, route }) {
@@ -10,6 +12,8 @@ class FoodARScene extends Component {
     this.state = {
       navigation: navigation,
       foodData: route.params.foodData,
+      isARSupported: false,
+      isARSupportedButQuitting: false,
     };
   }
 
@@ -18,49 +22,45 @@ class FoodARScene extends Component {
       this._handleARNotSupported,
       this._handleARSupported
     );
-
-    // BackHandler.addEventListener(
-    //   "hardwareBackPress",
-    //   this.handleBackButtonClick
-    // );
+    BackHandler.addEventListener("hardwareBackPress", this.backPressed);
   }
 
-  _handleARSupported() {
+  componentWillUnmount() {
+    BackHandler.removeEventListener("hardwareBackPress", this.backPressed);
+  }
+
+  _handleARSupported = () => {
     console.log("AR supported.");
-  }
+    this.setState({ isARSupported: true });
+  };
 
-  _handleARNotSupported(reason) {
+  _handleARNotSupported = (reason) => {
     console.log("AR not supported, with reason: " + reason);
-  }
+  };
 
-  // componentWillUnmount() {
-  //   BackHandler.removeEventListener(
-  //     "hardwareBackPress",
-  //     this.handleBackButtonClick
-  //   );
-  // }
-
-  // handleBackButtonClick = () => {
-  //   const { navigation, foodData } = this.state;
-
-  //   console.log("Pressed back button." + JSON.stringify(foodData));
-
-  //   navigation.push("FoodDetails", { data: foodData });
-  //   return true;
-  // };
+  backPressed = () => {
+    console.log("pressed back.");
+    this.setState({ isARSupportedButQuitting: true });
+  };
 
   render() {
-    let { foodData } = this.state;
+    let { foodData, isARSupported, isARSupportedButQuitting } = this.state;
 
-    return (
-      <ViroARSceneNavigator
-        style={styles.arView}
-        initialScene={{
-          scene: FoodActualARScene,
-        }}
-        viroAppProps={{ foodData: foodData }}
-      />
-    );
+    if (isARSupported) {
+      return (
+        <ViroARSceneNavigator
+          style={styles.arView}
+          initialScene={{
+            scene: FoodActualARScene,
+          }}
+          viroAppProps={{ foodData: foodData }}
+        />
+      );
+    } else if (isARSupportedButQuitting) {
+      return <QuittingArIcon />;
+    } else {
+      return <ArNotSupportedIcon />;
+    }
   }
 }
 

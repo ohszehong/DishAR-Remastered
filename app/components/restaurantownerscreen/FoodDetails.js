@@ -19,7 +19,6 @@ import {
 } from "@ui-kitten/components";
 import { SharedElement } from "react-navigation-shared-element";
 import { StackActions } from "@react-navigation/routers";
-import { CommonActions } from "@react-navigation/native";
 import * as firebase from "firebase";
 
 import PriceIcon from "../../icons/PriceIcon";
@@ -33,8 +32,6 @@ import RoAPI from "../../api/restaurant-owner-caller";
 function FoodDetails({ route, navigation }) {
   //restaurant owner data
   const { data } = route.params;
-
-  console.log("data here: " + JSON.stringify(data));
 
   //header and footer for card
   const Header = (props) => (
@@ -250,9 +247,9 @@ function FoodDetails({ route, navigation }) {
 
     if (response.success) {
       //delete food blob data in firebase
-      await deleteAsset(data.foodModelAssets.foodObjFilePath);
-      await deleteAsset(data.foodModelAssets.foodMtlFilePath);
-      await deleteAsset(data.foodModelAssets.foodTextureFilePath);
+      await deleteAsset(data.foodModelAssets.foodObjFirebaseFilePath);
+      await deleteAsset(data.foodModelAssets.foodMtlFirebaseFilePath);
+      await deleteAsset(data.foodModelAssets.foodTextureFirebaseFilePath);
       await deleteAsset(data.foodThumbnailFilePath);
 
       setPopUpMsg(response.msg);

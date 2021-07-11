@@ -37,8 +37,7 @@ class MenuList extends Component {
   }
 
   renderItem = (foodData) => {
-    const { foodThumbnailUrls, navigation, restaurantOwnerData, orderData } =
-      this.state;
+    const { foodThumbnailUrls, navigation, restaurantOwnerData } = this.state;
 
     let data = foodData.item;
 

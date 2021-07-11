@@ -6,52 +6,26 @@ import {
   Viro3DObject,
   ViroImage,
 } from "@akadrimer/react-viro";
-import * as firebase from "firebase";
 
 class FoodActualARScene extends Component {
   constructor({ sceneNavigator }) {
     super();
     this.state = {
       foodData: sceneNavigator.viroAppProps.foodData,
-      foodObjFileUrl: "",
-      foodMtlFileUrl: "",
-      foodTextureFileUrl: "",
-      rotation: [0, 0, 0],
-      scale: [0.1, 0.1, 0.1],
+      foodObjFilePath:
+        sceneNavigator.viroAppProps.foodData.foodModelAssets
+          .foodObjWorkspaceFilePath,
+      foodMtlFilePath:
+        sceneNavigator.viroAppProps.foodData.foodModelAssets
+          .foodMtlWorkspaceFilePath,
+      foodTextureFilePath:
+        sceneNavigator.viroAppProps.foodData.foodModelAssets
+          .foodTextureWorkspaceFilePath,
+      rotation: [270, 90, 0],
       isLoading: false,
       setupText: false,
     };
   }
-  componentDidMount() {
-    const { foodData } = this.state;
-
-    this.getFoodModelAssetsUrl(foodData.foodModelAssets.foodObjFilePath, "obj");
-    this.getFoodModelAssetsUrl(foodData.foodModelAssets.foodMtlFilePath, "mtl");
-    this.getFoodModelAssetsUrl(
-      foodData.foodModelAssets.foodTextureFilePath,
-      "texture"
-    );
-  }
-
-  getFoodModelAssetsUrl = (filePath, fileType) => {
-    const storage = firebase.default.storage();
-    const storageRef = storage.ref();
-    const fileRef = storageRef.child(filePath);
-
-    if (fileType === "obj") {
-      fileRef.getDownloadURL().then((url) => {
-        this.setState({ foodObjFileUrl: url });
-      });
-    } else if (fileType === "mtl") {
-      fileRef.getDownloadURL().then((url) => {
-        this.setState({ foodMtlFileUrl: url });
-      });
-    } else if (fileType === "texture") {
-      fileRef.getDownloadURL().then((url) => {
-        this.setState({ foodTextureFileUrl: url });
-      });
-    }
-  };
 
   _onRotate = (rotateState, rotationFactor, source) => {
     let { rotation } = this.state;
@@ -61,30 +35,6 @@ class FoodActualARScene extends Component {
         rotation: [rotation[0], rotation[1] + rotationFactor, rotation[2]],
       });
       return;
-    }
-  };
-
-  _onPinch = (pinchState, scaleFactor, source) => {
-    let { scale } = this.state;
-
-    let newScale = [
-      scale[0] * scaleFactor,
-      scale[1] * scaleFactor,
-      scale[2] * scaleFactor,
-    ];
-
-    if (pinchState == 3) {
-      if (newScale[0] >= 1 && newScale[0] >= 1 && newScale[0] >= 1) {
-        this.setState({
-          scale: [1, 1, 1],
-        });
-        return;
-      } else {
-        this.setState({
-          scale: newScale,
-        });
-        return;
-      }
     }
   };
 
@@ -99,35 +49,50 @@ class FoodActualARScene extends Component {
 
   render() {
     const {
-      foodObjFileUrl,
-      foodMtlFileUrl,
-      foodTextureFileUrl,
       rotation,
       isLoading,
-      scale,
       foodData,
+      foodObjFilePath,
+      foodMtlFilePath,
+      foodTextureFilePath,
       setupText,
     } = this.state;
 
+    // const constantRequiredDirectory = "./../assets/";
+
+    // let trimmedObjFilePath = foodObjFilePath.replace(
+    //   constantRequiredDirectory,
+    //   ""
+    // );
+    // let trimmedMtlFilePath = foodMtlFilePath.replace(
+    //   constantRequiredDirectory,
+    //   ""
+    // );
+    // let trimmedTextureFilePath = foodTextureFilePath.replace(
+    //   constantRequiredDirectory,
+    //   ""
+    // );
+
     return (
       <ViroARScene>
-        {foodObjFileUrl != "" &&
-          foodMtlFileUrl != "" &&
-          foodTextureFileUrl != "" && (
-            <Viro3DObject
-              position={[0.0, -0.5, -5]}
-              scale={scale}
-              rotation={rotation}
-              source={{ uri: foodObjFileUrl }}
-              type="OBJ"
-              dragType="FixedDistance"
-              onDrag={() => {}}
-              onRotate={this._onRotate}
-              onPinch={this._onPinch}
-              onLoadStart={this.setLoading}
-              onLoadEnd={this.setLoading}
-            />
-          )}
+        {foodData.foodObjWorkspaceFilePath != "" && (
+          <Viro3DObject
+            position={[0.0, -0.5, -20]}
+            scale={[0.8, 0.8, 0.8]}
+            rotation={rotation}
+            source={require("./../assets/60dd60d436a7f60ed8e230f2/Teisyoku/teisyoku2.obj")}
+            resources={[
+              require("./../assets/60dd60d436a7f60ed8e230f2/Teisyoku/teisyoku2.mtl"),
+              require("./../assets/60dd60d436a7f60ed8e230f2/Teisyoku/teisyoku2.jpg"),
+            ]}
+            type="OBJ"
+            dragType="FixedDistance"
+            onDrag={() => {}}
+            onRotate={this._onRotate}
+            onLoadStart={this.setLoading}
+            onLoadEnd={this.setLoading}
+          />
+        )}
         {setupText && (
           <React.Fragment>
             <ViroText

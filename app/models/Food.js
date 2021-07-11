@@ -13,15 +13,27 @@ const foodSchema = new mongoose.Schema({
     required: true,
   },
   foodModelAssets: {
-    foodObjFilePath: {
+    foodObjFirebaseFilePath: {
       type: String,
       required: true,
     },
-    foodMtlFilePath: {
+    foodObjWorkspaceFilePath: {
       type: String,
       required: true,
     },
-    foodTextureFilePath: {
+    foodMtlFirebaseFilePath: {
+      type: String,
+      required: true,
+    },
+    foodMtlWorkspaceFilePath: {
+      type: String,
+      required: true,
+    },
+    foodTextureFirebaseFilePath: {
+      type: String,
+      required: true,
+    },
+    foodTextureWorkspaceFilePath: {
       type: String,
       required: true,
     },

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, BackHandler } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   BottomNavigation,
@@ -9,8 +9,8 @@ import {
 
 import AddFoodForm from "./../components/restaurantownerscreen/AddFoodForm";
 import ViewQR from "./../components/restaurantownerscreen/ViewQR";
-import MenuList from "../components/restaurantownerscreen/MenuList";
 import BetweenFoodAndDetails from "../components/restaurantownerscreen/BetweenFoodAndDetails";
+import Quit from "../components/Quit";
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -60,7 +60,7 @@ const BottomTabBar = ({ navigation, state, restaurantOwnerData }) => {
       <BottomNavigationTab title="MENU" icon={MenuIcon} />
       <BottomNavigationTab title="ADD" icon={AddFoodIcon} />
       <BottomNavigationTab title="QR CODE" icon={QRIcon} />
-      <BottomNavigationTab title="LOGOUT" icon={LogoutIcon} />
+      <BottomNavigationTab title="QUIT" icon={LogoutIcon} />
     </BottomNavigation>
   );
 };
@@ -98,12 +98,11 @@ const TabNavigator = ({ restaurantOwnerData }) => {
           children={(props) => <BetweenFoodAndDetails {...props} />}
           initialParams={restaurantOwnerData}
         />
-
-        {/* <Screen
-          name="MenuList"
-          children={(props) => <MenuList {...props} />}
-          initialParams={restaurantOwnerData}
-        /> */}
+        <Screen
+          name="Quit"
+          options={{ unmountOnBlur: true }}
+          children={(props) => <Quit {...props} />}
+        />
       </Navigator>
     );
   } else {
@@ -123,6 +122,11 @@ const TabNavigator = ({ restaurantOwnerData }) => {
           name="ViewQR"
           component={ViewQR}
           initialParams={restaurantOwnerData}
+        />
+        <Screen
+          name="Quit"
+          options={{ unmountOnBlur: true }}
+          children={(props) => <Quit {...props} />}
         />
       </Navigator>
     );
