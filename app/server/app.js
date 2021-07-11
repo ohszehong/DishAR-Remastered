@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to node js");
 });
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 443;
 
 app.listen(PORT, () => {
   console.log("server is ready at port " + PORT);
