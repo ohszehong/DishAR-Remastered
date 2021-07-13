@@ -110,13 +110,13 @@ class FoodActualARScene extends Component {
               position={[0.0, -0.5, -20]}
               scale={[0.8, 0.8, 0.8]}
               rotation={rotation}
-              source={require("./../assets/60dd60d436a7f60ed8e230f2/Teisyoku/teisyoku2.obj")}
-              // source={{ uri: foodObjFileUrl }}
-              resources={[
-                require("./../assets/60dd60d436a7f60ed8e230f2/Teisyoku/teisyoku2.mtl"),
-                require("./../assets/60dd60d436a7f60ed8e230f2/Teisyoku/teisyoku2.jpg"),
-              ]}
-              // resources={[{ uri: foodMtlFileUrl }, { uri: foodTextureFileUrl }]}
+              // source={require("./../assets/60dd60d436a7f60ed8e230f2/Teisyoku/teisyoku2.obj")}
+              source={{ uri: foodObjFileUrl }}
+              // resources={[
+              //   require("./../assets/60dd60d436a7f60ed8e230f2/Teisyoku/teisyoku2.mtl"),
+              //   require("./../assets/60dd60d436a7f60ed8e230f2/Teisyoku/teisyoku2.jpg"),
+              // ]}
+              resources={[{ uri: foodMtlFileUrl }, { uri: foodTextureFileUrl }]}
               type="OBJ"
               dragType="FixedDistance"
               onDrag={() => {}}
