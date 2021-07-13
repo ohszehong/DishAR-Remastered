@@ -132,10 +132,6 @@ function AddFoodForm({ navigation, route }) {
         }
       });
     }
-
-    //directory to store food obj, mtl and texture to the server
-    // const restaurantOwnerDirectory =
-    //       "./app/assets/" + restaurantOwnerId + "/" + "Teisyoku";
   };
 
   const handleChooseFoodObj = async () => {

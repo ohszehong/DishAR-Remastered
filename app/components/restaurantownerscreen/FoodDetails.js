@@ -37,7 +37,8 @@ function FoodDetails({ route, navigation }) {
   const Header = (props) => (
     <Layout {...props}>
       <Layout style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text category="h2" style={{ fontWeight: "bold" }}>
+        {/* remember to change fontsize */}
+        <Text category="h5" style={{ fontWeight: "bold" }}>
           {data.foodName}
         </Text>
         <TouchableOpacity
@@ -413,7 +414,7 @@ function FoodDetails({ route, navigation }) {
                   data.role === "customer" ? null : (props) => Footer(props)
                 }
               >
-                <Layout style={styles.textDetailsContainer}>
+                <Layout>
                   <Text style={{ fontSize: 17, fontWeight: "bold" }}>
                     Description:{" "}
                   </Text>
@@ -463,9 +464,6 @@ const styles = StyleSheet.create({
   priceContainer: {
     flexDirection: "row",
     marginTop: 10,
-  },
-  textDetailsContainer: {
-    flexDirection: "row",
   },
   centerText: {
     textAlign: "center",

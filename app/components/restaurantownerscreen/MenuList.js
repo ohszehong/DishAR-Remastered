@@ -79,7 +79,8 @@ class MenuList extends Component {
           justifyContent: "space-between",
         }}
       >
-        <Text category="h5">{foodData.item.foodName}</Text>
+        {/*remeber to change fontsize*/}
+        <Text category="h6">{foodData.item.foodName}</Text>
         <Layout style={{ flexDirection: "row" }}>
           <Text style={{ fontSize: 17, fontWeight: "bold" }}>
             RM {foodData.item.foodPrice}

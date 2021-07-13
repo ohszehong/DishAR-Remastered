@@ -93,10 +93,12 @@ const TabNavigator = ({ restaurantOwnerData }) => {
           />
         )}
       >
+        {/* later come back here */}
         <Screen
           name="BetweenFoodAndDetails"
           children={(props) => <BetweenFoodAndDetails {...props} />}
           initialParams={restaurantOwnerData}
+          options={{ unmountOnBlur: true }}
         />
         <Screen
           name="Quit"

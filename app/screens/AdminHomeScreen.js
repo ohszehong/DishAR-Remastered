@@ -22,6 +22,7 @@ import RoAPI from "./../api/restaurant-owner-caller";
 import AdminAPI from "./../api/admin-caller";
 import PopUpMsg from "../components/reusable/PopUpMsg";
 import EmptyListIcon from "../icons/EmptyListIcon";
+import { BackHandler } from "react-native";
 
 const Header = (props, firstName, lastName, restaurantName) => (
   <View {...props}>
@@ -101,7 +102,6 @@ class AdminHomeScreen extends Component {
 
   async componentDidMount() {
     this.setState({ isLoading: true });
-
     //get all pending restaurant owner records
     const response = await RoAPI.getPendingRO();
 
@@ -175,7 +175,6 @@ class AdminHomeScreen extends Component {
     const {
       pendingRO,
       pendingCount,
-      selectedIndex,
       msgBoxMsg,
       approvedSignal,
       isLoading,

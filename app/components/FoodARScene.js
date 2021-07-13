@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { StyleSheet, BackHandler } from "react-native";
+import { StyleSheet } from "react-native";
 import { ViroUtils, ViroARSceneNavigator } from "@akadrimer/react-viro";
 
 import FoodActualARScene from "./FoodActualARScene";
 import ArNotSupportedIcon from "../icons/ArNotSupportedIcon";
-import QuittingArIcon from "../icons/QuittingArIcon";
 
 class FoodARScene extends Component {
   constructor({ navigation, route }) {
@@ -13,7 +12,6 @@ class FoodARScene extends Component {
       navigation: navigation,
       foodData: route.params.foodData,
       isARSupported: false,
-      isARSupportedButQuitting: false,
     };
   }
 
@@ -22,11 +20,6 @@ class FoodARScene extends Component {
       this._handleARNotSupported,
       this._handleARSupported
     );
-    BackHandler.addEventListener("hardwareBackPress", this.backPressed);
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener("hardwareBackPress", this.backPressed);
   }
 
   _handleARSupported = () => {
@@ -38,13 +31,8 @@ class FoodARScene extends Component {
     console.log("AR not supported, with reason: " + reason);
   };
 
-  backPressed = () => {
-    console.log("pressed back.");
-    this.setState({ isARSupportedButQuitting: true });
-  };
-
   render() {
-    let { foodData, isARSupported, isARSupportedButQuitting } = this.state;
+    let { foodData, isARSupported } = this.state;
 
     if (isARSupported) {
       return (
@@ -56,8 +44,6 @@ class FoodARScene extends Component {
           viroAppProps={{ foodData: foodData }}
         />
       );
-    } else if (isARSupportedButQuitting) {
-      return <QuittingArIcon />;
     } else {
       return <ArNotSupportedIcon />;
     }
