@@ -282,7 +282,7 @@ function FoodDetails({ route, navigation }) {
           <ScrollView contentContainerStyle={{ alignItems: "center" }}>
             <Text category="h5">EDIT DETAILS</Text>
             <Divider style={styles.divider} />
-            <Layout style={styles.formInputContainer}>
+            <Layout level="2" style={styles.formInputContainer}>
               <Text category="h6" style={{ fontWeight: "bold" }}>
                 Price:
               </Text>
@@ -294,7 +294,7 @@ function FoodDetails({ route, navigation }) {
                 defaultValue={data.foodPrice.toString()}
               ></Input>
             </Layout>
-            <Layout style={styles.formInputContainer}>
+            <Layout level="2" style={styles.formInputContainer}>
               <Text category="h6" style={{ fontWeight: "bold" }}>
                 Description:
               </Text>
@@ -306,7 +306,7 @@ function FoodDetails({ route, navigation }) {
                 defaultValue={data.foodDesc}
               ></Input>
             </Layout>
-            <Layout style={styles.formInputContainer}>
+            <Layout level="2" style={styles.formInputContainer}>
               <Text category="h6" style={{ fontWeight: "bold" }}>
                 Calories:
               </Text>
@@ -318,7 +318,7 @@ function FoodDetails({ route, navigation }) {
                 defaultValue={data.foodNutritionalFacts.foodCalories.toString()}
               ></Input>
             </Layout>
-            <Layout style={styles.formInputContainer}>
+            <Layout level="2" style={styles.formInputContainer}>
               <Text category="h6" style={{ fontWeight: "bold" }}>
                 Protein:
               </Text>
@@ -330,7 +330,7 @@ function FoodDetails({ route, navigation }) {
                 defaultValue={data.foodNutritionalFacts.foodProtein.toString()}
               ></Input>
             </Layout>
-            <Layout style={styles.formInputContainer}>
+            <Layout level="2" style={styles.formInputContainer}>
               <Text category="h6" style={{ fontWeight: "bold" }}>
                 Carbohydrates:
               </Text>
@@ -345,7 +345,7 @@ function FoodDetails({ route, navigation }) {
               ></Input>
             </Layout>
 
-            <Layout style={styles.formInputContainer}>
+            <Layout level="2" style={styles.formInputContainer}>
               <Text category="h6" style={{ fontWeight: "bold" }}>
                 Fat:
               </Text>
@@ -358,7 +358,7 @@ function FoodDetails({ route, navigation }) {
               ></Input>
             </Layout>
 
-            <Layout style={styles.formInputContainer}>
+            <Layout level="2" style={styles.formInputContainer}>
               <Text category="h6" style={{ fontWeight: "bold" }}>
                 Ingredients:
               </Text>
@@ -375,7 +375,7 @@ function FoodDetails({ route, navigation }) {
               <Text style={styles.errorMsg}>{inputError.errorMsg}</Text>
             )}
 
-            <Layout style={styles.formInputContainer}>
+            <Layout level="2" style={styles.formInputContainer}>
               <Button
                 size="large"
                 status="success"
@@ -384,7 +384,10 @@ function FoodDetails({ route, navigation }) {
                 {isLoading ? <Spinner status="control" /> : "EDIT"}
               </Button>
             </Layout>
-            <Layout style={{ marginBottom: 15, ...styles.formInputContainer }}>
+            <Layout
+              level="2"
+              style={{ marginBottom: 15, ...styles.formInputContainer }}
+            >
               <Button
                 size="large"
                 status="danger"
