@@ -31,7 +31,7 @@ function AddFoodForm({ navigation, route }) {
 
   //input data update
   const [foodName, setFoodName] = useState("");
-  const [foodPrice, setFoodPrice] = useState(0);
+  const [foodPrice, setFoodPrice] = useState("");
   const [foodObjFile, setFoodObjFile] = useState({
     fileName: null,
     fileUri: null,
