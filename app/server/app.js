@@ -14,8 +14,8 @@ app.get("/", (req, res) => {
   res.send("Welcome to node js");
 });
 
-app.listen(3000, () => {
-  console.log("server is ready at port 3000");
+app.listen(process.env.PORT || 3000, () => {
+  console.log("server is ready...");
 });
 
 //import routes
